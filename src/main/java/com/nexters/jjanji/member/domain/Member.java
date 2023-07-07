@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "MEMBER", indexes = {
-        @Index(name = "IDX_MEMBER_DEVICE_ID", columnList = "DEVICE_ID", unique = true)
+        @Index(name = "idx_member_device_id", columnList = "device_id", unique = true)
 })
 public class Member {
     @Id
@@ -23,7 +23,7 @@ public class Member {
     @Column(name = "MEMBER_ID")
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "device_id", nullable = false, unique = true)
     private String deviceId;
 
     @Builder
