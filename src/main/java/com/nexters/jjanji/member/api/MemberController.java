@@ -1,6 +1,5 @@
 package com.nexters.jjanji.member.api;
 
-import com.nexters.jjanji.common.CommonResponse;
 import com.nexters.jjanji.common.auth.MemberContext;
 import com.nexters.jjanji.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/test")
-    public CommonResponse<Long> test() {
-        Long userId = MemberContext.getContext();
-        return new CommonResponse<>(userId);
+    public Long test() {
+        return MemberContext.getContext();
     }
 }
