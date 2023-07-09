@@ -1,5 +1,6 @@
 package com.nexters.jjanji.challenge.domain;
 
+import com.nexters.jjanji.challenge.specification.PlanCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -27,6 +28,7 @@ public class Plan {
     @JoinColumn(name = "participation_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Participation participation;
 
+    @Column(nullable = false)
     private PlanCategory category;
 
 }

@@ -20,7 +20,8 @@ public class Challenge {
     @Column(name = "challenge_id")
     private Long id;
 
-    private LocalDateTime startDate;
+    @Column(nullable = false)
+    private LocalDateTime startAt;
 
-    private LocalDateTime endDate;
+    private LocalDateTime endAt;
 }
