@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "MEMBER", indexes = {
+@Table(name = "member", indexes = {
         @Index(name = "idx_member_device_id", columnList = "device_id", unique = true)
 })
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MEMBER_ID")
+    @Column(name = "member_id")
     private Long id;
 
     @Column(name = "device_id", nullable = false, unique = true)

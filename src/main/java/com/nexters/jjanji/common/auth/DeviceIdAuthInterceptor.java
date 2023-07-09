@@ -21,9 +21,11 @@ public class DeviceIdAuthInterceptor implements HandlerInterceptor {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String deviceId = request.getHeader("Authorization");
+        String deviceId = request.getHeader(AUTHORIZATION_HEADER);
         if (deviceId == null) {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "로그인이 필요합니다.");
             return false;
