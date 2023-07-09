@@ -23,5 +23,6 @@ public class Challenge {
     @Column(nullable = false)
     private LocalDateTime startAt;
 
+    @Column(nullable = false)
     private LocalDateTime endAt;
 }
