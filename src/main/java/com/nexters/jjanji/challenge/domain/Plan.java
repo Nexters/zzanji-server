@@ -31,4 +31,10 @@ public class Plan {
     @Column(nullable = false)
     private PlanCategory category;
 
+    @Column(nullable = false)
+    private Long goalAmount;
+
+    @Column(nullable = false, columnDefinition = "bigint default 0")
+    private Long currentAmount;
+
 }
