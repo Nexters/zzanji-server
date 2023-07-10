@@ -1,5 +1,6 @@
 package com.nexters.jjanji.member.domain;
 
+import com.nexters.jjanji.common.domain.BaseTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "member", indexes = {
         @Index(name = "idx_member_device_id", columnList = "device_id", unique = true)
 })
-public class Member {
+public class Member extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
