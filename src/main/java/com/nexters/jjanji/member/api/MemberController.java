@@ -1,6 +1,7 @@
 package com.nexters.jjanji.member.api;
 
 import com.nexters.jjanji.common.auth.MemberContext;
+import com.nexters.jjanji.member.dto.TestDto;
 import com.nexters.jjanji.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/test")
-    public Long test() {
-        return MemberContext.getContext();
+    public TestDto test() {
+        return new TestDto(MemberContext.getContext());
     }
 }
