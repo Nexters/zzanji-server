@@ -1,0 +1,19 @@
+== Member APIs
+
+=== 문서화 테스트
+테스트 설명
+
+==== 요청
+HTTP Example
+
+include::{snippets}/member/test/http-request.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/member/test/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/member/test/response-fields.adoc[]
