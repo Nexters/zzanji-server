@@ -29,8 +29,8 @@ class ChallengeSchedulerTest {
         Challenge challenge = challengeRepository.findAll().get(0);
 
         Assertions.assertThat(challengeRepository.count()).isOne();
-        Assertions.assertThat(challenge.getStartAt().getDayOfMonth()).isEqualTo(LocalDateTime.now().getDayOfMonth());
-        Assertions.assertThat(challenge.getEndAt().getDayOfMonth()).isEqualTo(LocalDateTime.now().getDayOfMonth() + 7);
+        Assertions.assertThat(challenge.getStartAt().getDayOfMonth()).isEqualTo(LocalDateTime.now().getDayOfMonth() + 7);
+        Assertions.assertThat(challenge.getEndAt().getDayOfMonth()).isEqualTo(LocalDateTime.now().getDayOfMonth() + 14);
     }
 
 }

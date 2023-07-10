@@ -17,8 +17,8 @@ public class ChallengeService {
     public void createChallenge() {
         LocalDateTime todayDate = getTodayDate();
         Challenge challenge = Challenge.builder()
-                .startAt(todayDate)
-                .endAt(todayDate.plusDays(7))
+                .startAt(todayDate.plusDays(7))
+                .endAt(todayDate.plusDays(14))
                 .build();
         challengeRepository.save(challenge);
     }
