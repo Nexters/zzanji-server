@@ -1,7 +1,7 @@
-package com.nexters.jjanji.challenge.scheduler;
+package com.nexters.jjanji.domain.challenge.scheduler;
 
 import com.nexters.jjanji.domain.challenge.domain.Challenge;
-import com.nexters.jjanji.challenge.repository.ChallengeRepository;
+import com.nexters.jjanji.domain.challenge.domain.repository.ChallengeRepository;
 import com.nexters.jjanji.domain.challenge.scheduler.ChallengeScheduler;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
