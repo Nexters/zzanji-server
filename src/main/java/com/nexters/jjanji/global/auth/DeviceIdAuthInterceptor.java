@@ -25,6 +25,10 @@ public class DeviceIdAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (request.getRequestURI().contains("/docs/index.html")) {
+            return true;
+        }
+
         String deviceId = request.getHeader(AUTHORIZATION_HEADER);
         if (deviceId == null) {
             response.sendError(HttpStatus.UNAUTHORIZED.value(), "로그인이 필요합니다.");

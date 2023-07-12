@@ -1,9 +1,10 @@
-package com.nexters.jjanji.member.presentation;
+package com.nexters.jjanji.domain.challenge.presentation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.jjanji.docs.RestDocs;
+import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
-import com.nexters.jjanji.domain.member.presentation.MemberController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,30 +22,30 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Transactional
-class MemberControllerTest extends RestDocs {
+class ChallengeControllerTest extends RestDocs {
 
     final static String AUTHORIZATION_HEADER = "Authorization";
     final static String DEVICE_ID = "DEVICE_ID";
     MockMvc mockMvc;
-    @Autowired HandlerInterceptor handlerInterceptor;
-    @Autowired MemberRepository memberRepository;
     @Autowired
-    MemberController memberController;
+    HandlerInterceptor handlerInterceptor;
+    @Autowired ObjectMapper objectMapper;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired ChallengeController challengeController;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = getMockMvcBuilder(restDocumentation, memberController)
+        this.mockMvc = getMockMvcBuilder(restDocumentation, challengeController)
                 .addInterceptors(handlerInterceptor)
                 .build();
         memberRepository.save(Member.builder()
@@ -53,20 +54,27 @@ class MemberControllerTest extends RestDocs {
     }
 
     @Test
-    @DisplayName("유저 테스트 API - 문서화 테스트")
-    void addPhochak() throws Exception {
+    @DisplayName("챌린지 API - 다음 챌린지 등록")
+    void participateNextChallenge() throws Exception {
+        //given
+        ParticipateRequestDto requestDto = ParticipateRequestDto.builder()
+                .goalAmount(10000L)
+                .build();
 
         //when, then
-        mockMvc.perform(get("/member/test").header(AUTHORIZATION_HEADER, DEVICE_ID))
+        mockMvc.perform(post("/v1/challenge/participate")
+                .header(AUTHORIZATION_HEADER, DEVICE_ID)
+                .header("Content-Type", "application/json")
+                .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andDo(document("member/test",
+                .andDo(document("challenge/participate/POST",
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
                                         .description("(필수) device id")
                         ),
-                        responseFields(
-                                fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("응답값")
+                        requestFields(
+                                fieldWithPath("goalAmount").type(JsonFieldType.NUMBER).description("목표 금액")
                         )
                 ));
     }
