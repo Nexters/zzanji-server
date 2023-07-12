@@ -20,7 +20,6 @@ public class ChallengeController {
     @PostMapping("/participate")
     public void participateNextChallenge(@Valid @RequestBody ParticipateRequestDto participateRequestDto) {
         Long memberId = MemberContext.getContext();
-        System.out.println("participateRequestDto = " + participateRequestDto.getGoalAmount());
         challengeService.participateNextChallenge(memberId, participateRequestDto);
     }
 }

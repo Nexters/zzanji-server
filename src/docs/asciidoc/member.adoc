@@ -1,19 +1,15 @@
 == Member APIs
 
-=== 문서화 테스트
-테스트 설명
+=== device id 기반 임시 인증 가이드
 
-==== 요청
-HTTP Example
+oauth를 적용하지 않고, 임시 인증을 통해서 사용자를 인증하는 방법입니다.
 
-include::{snippets}/member/test/http-request.adoc[]
+Authorization 헤더에 고유한 device id를 통해서 인증을 진행합니다.
 
-==== 응답
-Response HTTP Example
+Request Header 예시
 
-*정상*
-include::{snippets}/member/test/http-response.adoc[]
+include::{snippets}/challenge/participate/POST/request-headers.adoc[]
 
-Response Parameters
+서버 내부에서는 해당 device의 첫 요청때 회원가입을 진행시킵니다.
 
-include::{snippets}/member/test/response-fields.adoc[]
+만약 헤더가 없다면, 401 Unauthorized 를 반환합니다.
