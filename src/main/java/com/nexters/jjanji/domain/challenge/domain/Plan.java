@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,4 +38,11 @@ public class Plan {
     @Column(nullable = false, columnDefinition = "bigint default 0")
     private Long categorySpendAmount;
 
+    @Builder
+    public Plan(Participation participation, PlanCategory category, Long categoryGoalAmount) {
+        this.participation = participation;
+        this.category = category;
+        this.categoryGoalAmount = categoryGoalAmount;
+        this.categorySpendAmount = 0L;
+    }
 }
