@@ -1,8 +1,8 @@
 package com.nexters.jjanji.global.auth;
 
+import com.nexters.jjanji.domain.member.application.MemberService;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
-import com.nexters.jjanji.domain.member.application.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

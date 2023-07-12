@@ -1,9 +1,13 @@
 package com.nexters.jjanji.domain.challenge.application;
 
 import com.nexters.jjanji.domain.challenge.application.ChallengeService;
+import com.nexters.jjanji.domain.challenge.domain.Participation;
 import com.nexters.jjanji.domain.challenge.domain.repository.ChallengeRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationRepository;
+import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
+import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
+import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +17,9 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
@@ -27,6 +34,7 @@ class ChallengeServiceTest {
     @Mock ChallengeRepository challengeRepository;
     @Mock ParticipationRepository participationRepository;
     @Mock MemberRepository memberRepository;
+    @Mock PlanRepository planRepository;
 
     @Test
     @DisplayName("챌린지 생성 성공")
@@ -73,6 +81,53 @@ class ChallengeServiceTest {
             challengeService.participateNextChallenge(1L, request);
         }).isInstanceOf(IllegalStateException.class);
         then(participationRepository).should(never()).save(any());
+    }
+
+    @Test
+    @DisplayName("카테고리별 목표 설정 - 성공")
+    void addCategoryPlan() {
+        // given
+        List<CreateCategoryPlanRequestDto> request = List.of(
+                CreateCategoryPlanRequestDto.builder()
+                        .category(PlanCategory.TRANSPORTATION)
+                        .goalAmount(10000L)
+                        .build(),
+                CreateCategoryPlanRequestDto.builder()
+                        .category(PlanCategory.FOOD)
+                        .goalAmount(200000L)
+                        .build()
+        );
+
+        given(participationRepository.findByMemberAndChallenge(any(), any())).willReturn(Optional.of(new Participation()));
+
+        // when
+        challengeService.addCategoryPlan(1L, request);
+
+        // then
+        then(planRepository).should(times(1)).saveAll(any());
+    }
+
+    @Test
+    @DisplayName("카테고리별 목표 설정 - 아직 챌린지에 참여하지 않았으면, 예외를 반환한다.")
+    void addCategoryPlan_not_participated_challenge() {
+        // given
+        List<CreateCategoryPlanRequestDto> request = List.of(
+                CreateCategoryPlanRequestDto.builder()
+                        .category(PlanCategory.TRANSPORTATION)
+                        .goalAmount(10000L)
+                        .build(),
+                CreateCategoryPlanRequestDto.builder()
+                        .category(PlanCategory.FOOD)
+                        .goalAmount(200000L)
+                        .build()
+        );
+
+        given(participationRepository.findByMemberAndChallenge(any(), any())).willReturn(Optional.empty());
+
+        // when, then
+        Assertions.assertThatThrownBy(() -> {
+            challengeService.addCategoryPlan(1L, request);
+        }).isInstanceOf(IllegalStateException.class);
     }
 
 }

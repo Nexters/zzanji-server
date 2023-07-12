@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface ParticipationRepository extends JpaRepository<Participation, Long> {
 
     boolean existsByMemberAndChallenge(Member member, Challenge nextChallenge);
+
+    Optional<Participation> findByMemberAndChallenge(Member member, Challenge nextChallenge);
 }

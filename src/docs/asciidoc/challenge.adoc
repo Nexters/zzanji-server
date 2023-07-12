@@ -27,3 +27,46 @@ Response HTTP Example
 
 *정상*
 include::{snippets}/challenge/participate/POST/http-response.adoc[]
+
+=== 카테고리별 계획 등록
+
+다음 챌린지의 카테고리 계획을 등록합니다.
+
+파라미터로 *'리스트'* 형태의 데이터를 받습니다.
+
+혹시 클라이언트에서 벌크 업데이트 등 최적화 가능성을 고려하여 리스트 형태로 받습니다.
+
+일반적인 경우에, 배열에 하나의 데이터만 넣어도 무방합니다.
+
+==== 발생 가능 예외
+4xx - 아직 챌린지에 참여하지 않았습니다.
+
+==== 현재 지원 카테고리
+
+현재는 다음 카테고리를 지원합니다.
+
+기획 확정 이후에 추가 예정입니다.
+
+|===
+|FOOD |식비
+|TRANSPORTATION |교통비
+|===
+
+==== 요청
+HTTP Example
+
+include::{snippets}/challenge/plan/category/POST/http-request.adoc[]
+
+Request Header
+
+include::{snippets}/challenge/plan/category/POST/request-headers.adoc[]
+
+Request Body
+
+include::{snippets}/challenge/plan/category/POST/request-fields.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/challenge/plan/category/POST/http-response.adoc[]

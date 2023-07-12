@@ -2,9 +2,12 @@ package com.nexters.jjanji.domain.challenge.application;
 
 import com.nexters.jjanji.domain.challenge.domain.Challenge;
 import com.nexters.jjanji.domain.challenge.domain.Participation;
+import com.nexters.jjanji.domain.challenge.domain.Plan;
 import com.nexters.jjanji.domain.challenge.domain.repository.ChallengeRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationRepository;
+import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
+import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequestDto;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +25,7 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ParticipationRepository participationRepository;
     private final MemberRepository memberRepository;
+    private final PlanRepository planRepository;
 
     public void createChallenge() {
         LocalDateTime todayDate = getTodayDate();
@@ -47,5 +53,23 @@ public class ChallengeService {
                 .goalAmount(participateRequestDto.getGoalAmount())
                 .build();
         participationRepository.save(participation);
+    }
+
+    @Transactional
+    public void addCategoryPlan(Long memberId, List<CreateCategoryPlanRequestDto> createCategoryPlanRequestDtoList) {
+        Member member = memberRepository.getReferenceById(memberId);
+        Challenge nextChallenge = challengeRepository.findNextChallenge();
+        Participation participation = participationRepository.findByMemberAndChallenge(member, nextChallenge)
+                .orElseThrow(() -> new IllegalStateException("아직 챌린지에 참여하지 않았습니다."));
+
+        List<Plan> planList = createCategoryPlanRequestDtoList.stream()
+                .map(createCategoryPlanRequestDto -> Plan.builder()
+                        .participation(participation)
+                        .category(createCategoryPlanRequestDto.getCategory())
+                        .categoryGoalAmount(createCategoryPlanRequestDto.getGoalAmount())
+                        .build())
+                .toList();
+
+        planRepository.saveAll(planList);
     }
 }
