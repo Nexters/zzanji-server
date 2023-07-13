@@ -1,0 +1,60 @@
+name: CI
+
+# feat/*, develop 브랜치에 push or pr 작업 요청시 작동
+on:
+  push:
+    branches:
+      - feat/*
+  pull_request:
+    branches:
+      - develop
+      - feat/*
+
+permissions: write-all
+
+# 실행할 작업들
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    #build test를 위한 테스트 DB setting
+    services:
+      mysql:
+        image: mysql
+        env:
+          MYSQL_DATABASE: jjanji
+          MYSQL_ROOT_PASSWORD: 1234
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      #JDK setting
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      # Gradle 권한 부여
+      - name: Grant Execute permission for gradlew
+        run: chmod +x gradlew
+        shell: bash
+
+      #테스트 하지 않고 빌드를 진행
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+        shell: bash
+
+      #테스트 진행
+      - name: Test with Gradle
+        run: ./gradlew clean test
+        shell: bash
+
+      #테스트 결과 출력
+      - name: Publish Unit Test Result
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: ${{ always() }}
+        with:
+          files: build/test-results/**/*.xml
