@@ -42,14 +42,18 @@ jobs:
         run: chmod +x gradlew
         shell: bash
 
-      #테스트 하지 않고 빌드를 진행
-      - name: Build with Gradle
-        run: ./gradlew build -x test
-        shell: bash
+#      #테스트 하지 않고 빌드를 진행
+#      - name: Build with Gradle
+#        run: ./gradlew build -x test
+#        shell: bash
+#      #테스트 진행
+#      - name: Test with Gradle
+#        run: ./gradlew clean test
+#        shell: bash
 
-      #테스트 진행
-      - name: Test with Gradle
-        run: ./gradlew clean test
+      #build & Test
+      - name: Build With Gradle
+        run: ./gradlew clean build
         shell: bash
 
       #테스트 결과 출력
