@@ -10,11 +10,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class SpendingHistory {
 
@@ -33,5 +35,14 @@ public class SpendingHistory {
 
     @Column(nullable = false)
     private Long spendAmount;
+
+    public static SpendingHistory createSpending(Plan plan, String title, String memo, Long spendAmount){
+        SpendingHistory createSpending = new SpendingHistory();
+        createSpending.plan = plan;
+        createSpending.title = title;
+        createSpending.memo = memo;
+        createSpending.spendAmount = spendAmount;
+        return createSpending;
+    }
 
 }
