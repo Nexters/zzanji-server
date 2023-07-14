@@ -73,13 +73,6 @@ jobs:
       #      run: SPRING_PROFILES_ACTIVE=[prod] ./gradlew clean build
       #      shell: bash
 
-      # Rest docs build
-      - name: Build With Gradle and Generate Docs
-        run: |
-          ./gradlew generateRestDocs
-          ./gradlew copyDocs
-        shell: bash
-
       # docker build & push
       - name: Docker build & push to dev # 개발 서버용(develop) Docker build & push
         if: contains(github.ref, 'develop')
@@ -87,7 +80,6 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/zzanz-dev .
           docker push ${{ secrets.DOCKER_REPO }}/zzanz-dev
-
       #    - name: Docker build & push to prod # 운영 서버용(prod) Docker build & push
       #      run: |
       #        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
