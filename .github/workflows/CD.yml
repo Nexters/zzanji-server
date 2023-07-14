@@ -14,18 +14,6 @@ permissions:
 jobs:
   CD:
     runs-on: ubuntu-latest
-    #build test를 위한 테스트 DB setting
-    #현재는 별도의 DB를 두지 않고 서버 내부에서 Docker로 MySQL 실행.
-    services:
-      mysql:
-        image: mysql
-        env:
-          MYSQL_DATABASE: jjanji
-          MYSQL_ROOT_PASSWORD: 1234
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
       #JDK setting
       - name: Checkout
