@@ -36,6 +36,14 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      # 문서 생성을 위한 Gradle 빌드 작업 추가
+      - name: Build With Gradle and Generate Docs
+        run: |
+          ./gradlew clean build asciidoctor
+          mkdir -p ./build/generated-docs
+          mv ./build/docs/asciidoc/html5/* ./build/generated-docs
+        shell: bash
+
       #dev, prod 환경에 맞는 .yml 생성
       # create application-dev.yml
       - name: make application-dev.yml
