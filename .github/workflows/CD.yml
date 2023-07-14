@@ -36,6 +36,24 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      #dev, prod 환경에 맞는 .yml 생성
+      # create application-dev.yml
+      - name: make application-dev.yml
+        if: contains(github.ref, 'develop') # branch가 develop인 경우
+        run: |
+          cd ./src/main/resources
+          touch ./application-dev.yml
+          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
+        shell: bash
+          # create application-prod.yml
+          #    - name: application-prod.yml
+          #      if: contains(github.ref, 'main')  # branch가 main인 경우
+          #      run: |
+          #        cd ./src/main/resources
+          #        touch ./application-prod.yml
+          #        echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.yml
+        #      shell: bash
+
       # Gradle 권한 부여
       - name: Grant Execute permission for gradlew
         run: chmod +x gradlew
@@ -55,31 +73,12 @@ jobs:
       #      run: SPRING_PROFILES_ACTIVE=[prod] ./gradlew clean build
       #      shell: bash
 
-      # 문서 생성을 위한 Gradle 빌드 작업 추가
+      # Rest docs build
       - name: Build With Gradle and Generate Docs
         run: |
-          ./gradlew asciidoctor
-          mkdir -p ./build/generated-docs
-          mv ./build/docs/asciidoc/html5/* ./build/generated-docs
+          ./gradlew generateRestDocs
+          ./gradlew copyDocs
         shell: bash
-
-      #dev, prod 환경에 맞는 .yml 생성
-      # create application-dev.yml
-      - name: make application-dev.yml
-        if: contains(github.ref, 'develop') # branch가 develop인 경우
-        run: |
-          cd ./src/main/resources
-          touch ./application-dev.yml
-          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
-        shell: bash
-      # create application-prod.yml
-      #    - name: application-prod.yml
-      #      if: contains(github.ref, 'main')  # branch가 main인 경우
-      #      run: |
-      #        cd ./src/main/resources
-      #        touch ./application-prod.yml
-      #        echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.yml
-      #      shell: bash
 
       # docker build & push
       - name: Docker build & push to dev # 개발 서버용(develop) Docker build & push
