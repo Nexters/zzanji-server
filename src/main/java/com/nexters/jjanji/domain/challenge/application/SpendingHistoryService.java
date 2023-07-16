@@ -5,7 +5,8 @@ import com.nexters.jjanji.domain.challenge.domain.SpendingHistory;
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.SpendingHistoryRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingSaveDto;
-import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetailDto;
+import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetail;
+import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetailResponse;
 import com.nexters.jjanji.global.exception.NotExistPlanException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,16 @@ public class SpendingHistoryService {
         spendingHistoryRepository.save(createSpending);
 
         findPlan.plusCategorySpendAmount(dto.getSpendAmount());
+    }
+
+    public SpendingDetailResponse findSpendingList(Long planId){
+        Plan findPlan = validAndGetPlan(planId);
+
+        List<SpendingDetail> spendingDetailsDto = spendingHistoryRepository.findByPlan(findPlan).stream()
+                .map(sp -> new SpendingDetail(sp.getTitle(), sp.getMemo(), sp.getSpendAmount()))
+                .collect(Collectors.toList());
+
+        return new SpendingDetailResponse(findPlan.getCategoryGoalAmount(), findPlan.getCategorySpendAmount(), spendingDetailsDto);
     }
 
     private Plan validAndGetPlan(Long planId){
