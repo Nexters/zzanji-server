@@ -4,10 +4,12 @@ import com.nexters.jjanji.domain.challenge.domain.Challenge;
 import com.nexters.jjanji.domain.challenge.domain.Participation;
 import com.nexters.jjanji.domain.challenge.domain.Plan;
 import com.nexters.jjanji.domain.challenge.domain.repository.ChallengeRepository;
+import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationDao;
 import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequestDto;
+import com.nexters.jjanji.domain.challenge.dto.response.ParticipationResponseDto;
 import com.nexters.jjanji.domain.challenge.specification.ChallengeState;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
@@ -25,6 +27,7 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
     private final ParticipationRepository participationRepository;
+    private final ParticipationDao participationDao;
     private final MemberRepository memberRepository;
     private final PlanRepository planRepository;
 
@@ -90,5 +93,9 @@ public class ChallengeService {
                 .toList();
 
         planRepository.saveAll(planList);
+    }
+
+    public List<ParticipationResponseDto> getParticipateList(Long memberId, Long cursor, Long limit) {
+        return participationDao.getParticipateList(memberId, cursor, limit);
     }
 }

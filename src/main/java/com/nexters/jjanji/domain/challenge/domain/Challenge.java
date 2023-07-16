@@ -30,6 +30,12 @@ public class Challenge {
     @Column(nullable = false)
     private LocalDateTime endAt;
 
+    @Column(nullable = false)
+    private Long month;
+
+    @Column(nullable = false)
+    private Long week;
+
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private ChallengeState state;

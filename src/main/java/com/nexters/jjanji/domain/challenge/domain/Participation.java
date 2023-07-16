@@ -36,10 +36,17 @@ public class Participation {
     @Column(nullable = false)
     private Long goalAmount;
 
+    @Column(nullable = false)
+    private Long currentAmount = 0L;
+
     @Builder
     public Participation(Member member, Challenge challenge, Long goalAmount) {
         this.member = member;
         this.challenge = challenge;
         this.goalAmount = goalAmount;
+    }
+
+    public void updateCurrentAmount(Long amount) {
+        this.currentAmount += amount;
     }
 }
