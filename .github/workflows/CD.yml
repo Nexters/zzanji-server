@@ -52,7 +52,7 @@ jobs:
         if: contains(github.ref, 'develop')
         env:
           SPRING_PROFILES_ACTIVE: dev
-        run: ./gradlew clean build
+        run: ./gradlew clean build --info
         shell: bash
       #    - name: Main Build With Gradle # main branch test
       #      if: contains(github.ref, 'main')
