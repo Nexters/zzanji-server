@@ -42,3 +42,4 @@ out/
 .idea/**/contentModel.xml
 **/resources/static/docs
 src/docs/asciidoc/rescode.adoc
+src/main/generated
