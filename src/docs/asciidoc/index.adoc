@@ -15,4 +15,6 @@ include::member.adoc[]
 
 include::challenge.adoc[]
 
+include::spending.adoc[]
+
 created by zzanzi

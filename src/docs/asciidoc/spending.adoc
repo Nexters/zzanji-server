@@ -1,0 +1,27 @@
+== Spending APIs
+
+=== 소비 내역 등록
+카테고리별 소비 내역을 입력합니다.
+
+==== 발생 가능한 예외
+400 - 계획된 카테고리 정보가 없습니다.
+
+==== 요청
+*HTTP Request Example*
+include::{snippets}/challenge/plan/spending/POST/http-request.adoc[]
+
+*Request Header*
+include::{snippets}/challenge/plan/spending/POST/request-headers.adoc[]
+
+*Request Path*
+include::{snippets}/challenge/plan/spending/POST/path-parameters.adoc[]
+
+*Request Body*
+include::{snippets}/challenge/plan/spending/POST/request-fields.adoc[]
+
+===== 응답
+*Http Response Example*
+
+*200*
+include::{snippets}/challenge//plan/spending/POST/http-response.adoc[]
+
