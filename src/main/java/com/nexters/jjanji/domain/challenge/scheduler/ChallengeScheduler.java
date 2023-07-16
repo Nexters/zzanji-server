@@ -15,7 +15,7 @@ public class ChallengeScheduler {
 
     @Scheduled(cron = "0 0 0 ? * MON", zone = "Asia/Seoul")
     public void createChallengeTask() {
-        challengeService.createChallenge();
+        challengeService.createChallengeAndUpdateState();
         log.info("createChallengeTask|create challenge task is completed");
     }
 }

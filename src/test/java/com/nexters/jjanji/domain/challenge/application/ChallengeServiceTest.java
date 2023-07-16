@@ -42,7 +42,7 @@ class ChallengeServiceTest {
         // given
 
         // when
-        challengeService.createChallenge();
+        challengeService.createChallengeAndUpdateState();
 
         // then
         then(challengeRepository).should(times(1)).save(any());
