@@ -37,13 +37,12 @@ public class SpendingHistory extends BaseTime {
     @Column(nullable = false)
     private Long spendAmount;
 
-    public static SpendingHistory createSpending(Plan plan, String title, String memo, Long spendAmount){
-        SpendingHistory createSpending = new SpendingHistory();
-        createSpending.plan = plan;
-        createSpending.title = title;
-        createSpending.memo = memo;
-        createSpending.spendAmount = spendAmount;
-        return createSpending;
+    @Builder
+    public SpendingHistory(Plan plan, String title, String memo, Long spendAmount){
+        this.plan = plan;
+        this.title = title;
+        this.memo = memo;
+        this.spendAmount = spendAmount;
     }
 
 }

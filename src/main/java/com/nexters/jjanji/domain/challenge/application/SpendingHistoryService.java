@@ -19,7 +19,13 @@ public class SpendingHistoryService {
     @Transactional
     public void addSpendingHistory(Long planId, SpendingSaveDto dto){
         Plan findPlan = planRepository.findById(planId).orElseThrow(() -> new NotExistPlanException(planId));
-        SpendingHistory createSpending = SpendingHistory.createSpending(findPlan, dto.getTitle(), dto.getMemo(), dto.getSpendAmount());
+
+        SpendingHistory createSpending = SpendingHistory.builder()
+                .title(dto.getTitle())
+                .memo(dto.getMemo())
+                .spendAmount(dto.getSpendAmount())
+                .plan(findPlan)
+                .build();
         spendingHistoryRepository.save(createSpending);
     }
 }
