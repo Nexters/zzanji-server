@@ -1,5 +1,6 @@
 package com.nexters.jjanji.domain.challenge.domain;
 
+import com.nexters.jjanji.global.domain.BaseTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class SpendingHistory {
+public class SpendingHistory extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
