@@ -14,7 +14,6 @@ permissions:
 jobs:
   CD:
     runs-on: ubuntu-latest
-
     steps:
       #JDK setting
       - name: Checkout
@@ -51,7 +50,9 @@ jobs:
       # develop, main branch Gradle build 진행
       - name: Develop Build With Gradle # develop branch test
         if: contains(github.ref, 'develop')
-        run: SPRING_PROFILES_ACTIVE=[dev] ./gradlew clean build
+        env:
+          SPRING_PROFILES_ACTIVE: dev
+        run: ./gradlew clean build
         shell: bash
       #    - name: Main Build With Gradle # main branch test
       #      if: contains(github.ref, 'main')
