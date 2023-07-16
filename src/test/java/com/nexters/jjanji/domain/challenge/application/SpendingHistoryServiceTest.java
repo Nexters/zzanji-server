@@ -1,13 +1,11 @@
 package com.nexters.jjanji.domain.challenge.application;
 
 import com.nexters.jjanji.domain.challenge.domain.Plan;
-import com.nexters.jjanji.domain.challenge.domain.SpendingHistory;
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.SpendingHistoryRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingSaveDto;
 import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
-import com.nexters.jjanji.global.exception.NotExistPlan;
-import org.assertj.core.api.Assertions;
+import com.nexters.jjanji.global.exception.NotExistPlanException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +54,6 @@ class SpendingHistoryServiceTest {
         //when & then
         assertThatThrownBy(() -> {
             spendingHistoryService.addSpendingHistory(1L, saveDto);
-        }).isInstanceOf(NotExistPlan.class);
+        }).isInstanceOf(NotExistPlanException.class);
     }
 }
