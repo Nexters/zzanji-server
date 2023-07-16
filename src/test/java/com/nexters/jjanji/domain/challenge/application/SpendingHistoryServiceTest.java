@@ -1,6 +1,7 @@
 package com.nexters.jjanji.domain.challenge.application;
 
 import com.nexters.jjanji.domain.challenge.domain.Plan;
+import com.nexters.jjanji.domain.challenge.domain.SpendingHistory;
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.SpendingHistoryRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingSaveDto;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -31,18 +33,19 @@ class SpendingHistoryServiceTest {
     @DisplayName("지출 내역 등록에 성공하다.")
     void addSpendingHistory(){
         //given
-        final Plan plan = Plan.builder().category(PlanCategory.FOOD).categoryGoalAmount(10000L).build();
+        Plan plan = mock(Plan.class);
         given(planRepository.findById(1L))
                 .willReturn(Optional.of(plan));
 
-        SpendingSaveDto saveDto = new SpendingSaveDto("title", "content", 10000L);
+        SpendingSaveDto saveDto = new SpendingSaveDto("title", "content", 1000L);
 
         //when
         spendingHistoryService.addSpendingHistory(1L, saveDto);
 
         //then
         verify(planRepository).findById(1L);
-        verify(spendingHistoryRepository).save(any());
+        verify(spendingHistoryRepository).save(any(SpendingHistory.class));
+        verify(plan).plusCategorySpendAmount(1000L);
     }
 
     @Test
