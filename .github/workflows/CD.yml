@@ -54,6 +54,7 @@ jobs:
             echo "index.html exist inside the JAR file!!!!!"
           else
             echo "index.html not found inside the JAR file!!!!!!!"
+          fi
         shell: bash
 
       # docker build & push
