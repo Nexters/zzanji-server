@@ -35,10 +35,22 @@ dependencies {
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
+//변수 선언
 ext {
 	snippetsDir = file('build/generated-snippets')
 }
 
+//bootjar와 관련된 설정이며, 스니펫을 이용해 문서 작성후,
+//build-docs-asciidoc 하위에 생기는 html 파일을 BOOT-INF/classes/static/docs로 복사
+bootJar {
+	dependsOn asciidoctor
+	from ("${asciidoctor.outputDir}/html5") {
+		into 'BOOT-INF/classes/static/docs'
+//		into 'static/docs'
+	}
+}
+
+//생성물이 snippertDir에 생성됨.
 test {
 	useJUnitPlatform()
 	outputs.dir snippetsDir
@@ -58,6 +70,7 @@ asciidoctor {
 	baseDirFollowsSourceDir()
 }
 
+//기존에 만들어진 adoc 삭제
 asciidoctor.doFirst {
 	delete file('src/main/resources/static/docs')
 }
@@ -66,13 +79,6 @@ task copyDocument(type: Copy) {
 	dependsOn asciidoctor
 	from file("build/docs/asciidoc")
 	into file("src/main/resources/static/docs")
-}
-
-bootJar {
-	dependsOn asciidoctor
-	from ("${asciidoctor.outputDir}/html5") {
-		into 'static/docs'
-	}
 }
 
 build {
