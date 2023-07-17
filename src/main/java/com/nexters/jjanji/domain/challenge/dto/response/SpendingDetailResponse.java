@@ -11,6 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 public class SpendingDetailResponse {
     private Long goalAmount;
-    private Long SpendAmount;
+    private Long spendAmount;
     private List<SpendingDetail> spendingList;
 }
