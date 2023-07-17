@@ -24,6 +24,17 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      #gradle caching
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       #dev, prod 환경에 맞는 .yml 생성
       # create application-dev.yml
       - name: make application-dev.yml
