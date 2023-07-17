@@ -8,13 +8,11 @@ import com.nexters.jjanji.domain.challenge.dto.request.SpendingSaveDto;
 import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetailResponse;
 import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
 import com.nexters.jjanji.global.exception.NotExistPlanException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
