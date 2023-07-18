@@ -95,7 +95,13 @@ public class ChallengeService {
         planRepository.saveAll(planList);
     }
 
+    @Transactional(readOnly = true)
     public List<ParticipationResponseDto> getParticipateList(Long memberId, Long cursor, Long limit) {
-        return participationDao.getParticipateList(memberId, cursor, limit);
+        List<ParticipationResponseDto> participateList = participationDao.getParticipateList(memberId, cursor, limit);
+        participateList.forEach(participationResponseDto -> {
+            List<Plan> planList = planRepository.findByParticipationId(participationResponseDto.getParticipationId());
+            participationResponseDto.setPlanList(planList);
+        });
+        return participateList;
     }
 }

@@ -6,7 +6,6 @@ import com.nexters.jjanji.domain.challenge.dto.response.ParticipationResponseDto
 import com.nexters.jjanji.domain.challenge.dto.response.QParticipationResponseDto;
 import com.nexters.jjanji.domain.member.domain.QMember;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
