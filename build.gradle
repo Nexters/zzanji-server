@@ -45,7 +45,7 @@ ext {
 }
 
 //bootjar와 관련된 설정이며, 스니펫을 이용해 문서 작성후,
-//build-docs-asciidoc 하위에 생기는 html 파일을 BOOT-INF/classes/static/docs로 복사
+//build-docs-asciidoc 하위에 생기는 html 파일을 build/resources/main/static/docs 로 복사
 bootJar {
 	dependsOn asciidoctor
 	from ("${asciidoctor.outputDir}/html5") {
@@ -84,6 +84,8 @@ task copyDocument(type: Copy) {
 	into file("src/main/resources/static/docs")
 }
 
+processResources.dependsOn(copyDocument)
+
 build {
 	dependsOn copyDocument
 }
@@ -91,6 +93,7 @@ build {
 clean {
 	delete file('src/main/generated')
 }
+
 
 // QueryDSL 설정
 def querydslSrcDir = 'src/main/generated'

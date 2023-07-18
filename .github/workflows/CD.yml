@@ -39,12 +39,17 @@ jobs:
         run: chmod +x gradlew
         shell: bash
 
-      # develop, main branch Gradle build 진행
-      - name: Develop Build With Gradle # develop branch test
+      # develop test 진행(Rest docs 문서화를 위해서)
+      - name: Develop test With Gradle
         if: contains(github.ref, 'develop')
         env:
           SPRING_PROFILES_ACTIVE: dev
-        run: ./gradlew build --info
+        run: ./gradlew clean test --stacktrace
+        shell: bash
+
+      # build 진행(테스트 없이)
+      - name: Build With Gradle(without test)
+        run: ./gradlew build -x test --stacktrace
         shell: bash
 
       #Rest docs 문서 체크
