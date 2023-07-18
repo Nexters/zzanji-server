@@ -42,9 +42,9 @@ jobs:
       # develop, main branch Gradle build 진행
       - name: Develop Build With Gradle # develop branch test
         if: contains(github.ref, 'develop')
-#        env:
-#          SPRING_PROFILES_ACTIVE: dev
-        run: ./gradlew clean build --info
+        env:
+          SPRING_PROFILES_ACTIVE: dev
+        run: ./gradlew build --info
         shell: bash
 
       #Rest docs 문서 체크
