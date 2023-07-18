@@ -33,31 +33,29 @@ jobs:
           touch ./application-dev.yml
           echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
         shell: bash
-          # create application-prod.yml
-          #    - name: application-prod.yml
-          #      if: contains(github.ref, 'main')  # branch가 main인 경우
-          #      run: |
-          #        cd ./src/main/resources
-          #        touch ./application-prod.yml
-          #        echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.yml
-        #      shell: bash
 
       # Gradle 권한 부여
       - name: Grant Execute permission for gradlew
         run: chmod +x gradlew
         shell: bash
 
-      # develop, main branch Gradle build 진행
-      - name: Develop Build With Gradle # develop branch test
+      # develop build(with test)
+      - name: Develop Build With Test
         if: contains(github.ref, 'develop')
         env:
           SPRING_PROFILES_ACTIVE: dev
-        run: ./gradlew clean build --info
+        run: ./gradlew clean build --stacktrace
         shell: bash
-      #    - name: Main Build With Gradle # main branch test
-      #      if: contains(github.ref, 'main')
-      #      run: SPRING_PROFILES_ACTIVE=[prod] ./gradlew clean build
-      #      shell: bash
+
+      #Rest docs 문서 체크
+      - name: Check for index.html
+        run: |
+          if jar tf build/libs/jjanji-0.0.1-SNAPSHOT.jar | grep -q "index.html"; then
+            echo "index.html exist inside the JAR file!!!!!"
+          else
+            echo "index.html not found inside the JAR file!!!!!!!"
+          fi
+        shell: bash
 
       # docker build & push
       - name: Docker build & push to dev # 개발 서버용(develop) Docker build & push
@@ -66,11 +64,6 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/zzanz-dev .
           docker push ${{ secrets.DOCKER_REPO }}/zzanz-dev
-      #    - name: Docker build & push to prod # 운영 서버용(prod) Docker build & push
-      #      run: |
-      #        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      #        docker build -f Dokerfile-prod -t ${{ secrets.DOCKER_REPO }}/zzanz-prod .
-      #        docker push ${{ secrets.DOCKER_REPO }}/zzanz-prod
 
       # SSH 접속 및 배포
       # deploy to develop
@@ -89,22 +82,3 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_REPO }}/zzanz-dev
             docker-compose up -d
             docker image prune -f
-            
-            
-      # deploy to prod
-      #    - name: Deploy to prod
-      #      uses: appleboy/ssh-action@master
-      #      id: deploy-prod
-      #      if: contains(github.ref, 'main')
-      #      with:
-      #        host: ${{ secrets.PROD_SERVER_IP }}
-      #        username: ${{ secrets.PROD_SERVER_USER }}
-      #        password: ${{ secrets.PROD_SERVER_PASSWORD }}
-      #        port: ${{ secrets.PROD_SERVER_PORT }}
-      #        script: |
-      #          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      #          sudo docker rm -f $(docker ps -q -a)
-      #          sudo docker pull ${{ secrets.DOCKER_REPO }}/zzanz-prod
-      #          docker-compose up -d
-      #          docker image prune -f
-          

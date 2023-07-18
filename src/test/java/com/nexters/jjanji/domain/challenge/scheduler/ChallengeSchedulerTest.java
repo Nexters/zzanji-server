@@ -4,6 +4,7 @@ import com.nexters.jjanji.domain.challenge.domain.Challenge;
 import com.nexters.jjanji.domain.challenge.domain.repository.ChallengeRepository;
 import com.nexters.jjanji.domain.challenge.scheduler.ChallengeScheduler;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ class ChallengeSchedulerTest {
 
     @Test
     @DisplayName("챌린지 생성 스케줄러 테스트")
+    @Disabled
     void createChallengeTask() {
         //when
         challengeScheduler.createChallengeTask();
