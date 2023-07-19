@@ -1,5 +1,34 @@
 == Challenge APIs
 
+=== 챌린지 참여 내역 조회 (페이징)
+
+참여 내역을 조회합니다.
+
+==== 요청
+HTTP Example
+
+include::{snippets}/challenge/participate/GET/http-request.adoc[]
+
+Request Header
+
+include::{snippets}/challenge/participate/GET/request-headers.adoc[]
+
+Query Parameters
+
+include::{snippets}/challenge/participate/GET/query-parameters.adoc[]
+
+==== 응답
+
+Response HTTP Example
+
+*정상*
+include::{snippets}/challenge/participate/GET/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/challenge/participate/GET/response-fields.adoc[]
+
+
 === 다음 챌린지 등록
 
 다음주부터 시작되는 챌린지에 등록합니다.
