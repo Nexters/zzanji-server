@@ -1,5 +1,6 @@
 package com.nexters.jjanji.domain.challenge.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nexters.jjanji.domain.challenge.domain.Plan;
 import com.nexters.jjanji.domain.challenge.specification.ChallengeState;
 import com.querydsl.core.annotations.QueryProjection;
@@ -13,7 +14,9 @@ import java.util.List;
 public class ParticipationResponseDto {
 
     private final Long challengeId;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private final LocalDateTime startAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private final LocalDateTime endAt;
     private final Long month;
     private final Long week;

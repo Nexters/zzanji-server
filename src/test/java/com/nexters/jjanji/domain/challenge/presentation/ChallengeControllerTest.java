@@ -207,8 +207,8 @@ class ChallengeControllerTest extends RestDocs {
                         ),
                         responseFields(
                                 fieldWithPath("[].challengeId").type(JsonFieldType.NUMBER).description("챌린지 id"),
-                                fieldWithPath("[].startAt").type(JsonFieldType.ARRAY).description("종료 시간"),
-                                fieldWithPath("[].endAt").type(JsonFieldType.ARRAY).description("시작 시간"),
+                                fieldWithPath("[].startAt").type(JsonFieldType.STRING).description("종료 시간"),
+                                fieldWithPath("[].endAt").type(JsonFieldType.STRING).description("시작 시간"),
                                 fieldWithPath("[].month").type(JsonFieldType.NUMBER).description("M째주"),
                                 fieldWithPath("[].week").type(JsonFieldType.NUMBER).description("W째주"),
                                 fieldWithPath("[].state").type(JsonFieldType.STRING).description("챌린지 상태(PRE_OPENED, OPENED, CLOSED)"),
