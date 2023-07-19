@@ -45,4 +45,8 @@ public class Plan {
         this.categoryGoalAmount = categoryGoalAmount;
         this.categorySpendAmount = 0L;
     }
+
+    public void plusCategorySpendAmount(Long amount){
+        this.categorySpendAmount += amount;
+    }
 }

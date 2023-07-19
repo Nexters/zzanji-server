@@ -24,9 +24,9 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @GetMapping("/participate")
-    public List<ParticipationResponseDto> getParticipateList(@RequestParam(required = false) Long cursor, @RequestParam Long limit) {
+    public List<ParticipationResponseDto> getParticipateList(@RequestParam(required = false) Long cursor, @RequestParam Long size) {
         Long memberId = MemberContext.getContext();
-        return challengeService.getParticipateList(memberId, cursor, limit);
+        return challengeService.getParticipateList(memberId, cursor, size);
     }
 
     @PostMapping("/participate")

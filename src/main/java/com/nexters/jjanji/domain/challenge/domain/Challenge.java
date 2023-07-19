@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
 
 @Getter
 @NoArgsConstructor
@@ -44,7 +45,19 @@ public class Challenge {
     public Challenge(LocalDateTime startAt, LocalDateTime endAt) {
         this.startAt = startAt;
         this.endAt = endAt;
-        this.state = ChallengeState.NOT_OPENED;
+        this.month = calculateChallengeMonth(startAt);
+        this.week = calculateChallengeWeek(startAt);
+        this.state = ChallengeState.PRE_OPENED;
+    }
+
+    private Long calculateChallengeMonth(LocalDateTime startAt) {
+        // ISO-8601
+        return (long) startAt.get(WeekFields.ISO.weekOfMonth());
+    }
+
+    private Long calculateChallengeWeek(LocalDateTime startAt) {
+        // ISO-8601
+        return (long) startAt.get(WeekFields.ISO.weekOfYear());
     }
 
     public void closeChallenge() {
@@ -55,7 +68,7 @@ public class Challenge {
     }
 
     public void openChallenge() {
-        if (state != ChallengeState.NOT_OPENED) {
+        if (state != ChallengeState.PRE_OPENED) {
             throw new RuntimeException("진행중이지 않은 챌린지만 시작될 수 있습니다.");
         }
         state = ChallengeState.OPENED;

@@ -32,21 +32,21 @@ public class ChallengeService {
     private final PlanRepository planRepository;
 
     @Transactional
-    public void createChallengeAndUpdateState() {
+    public Challenge createChallengeAndUpdateState() {
         updatePreviousChallenges();
         LocalDateTime todayDate = getTodayDate();
         Challenge challenge = Challenge.builder()
                 .startAt(todayDate.plusDays(7))
                 .endAt(todayDate.plusDays(14))
                 .build();
-        challengeRepository.save(challenge);
+        return challengeRepository.save(challenge);
     }
 
     private void updatePreviousChallenges() {
         //TODO: 해당 매서드 정리 필요.
         //TODO: currentChallenge 와 nextChallenge 의 캐싱이 필요해 보임. -> 변경이 예측 가능한 데이터
         //TODO: 초기 런칭 단계에만 필요한 예외 및 옵셔널은 어떻게 관리해야 하는지에 대한 고민 필요. 실제 프로덕션에서는 무의미.
-        Optional<Challenge> optionalCurrentChallenge = challengeRepository.findChallengeByState(ChallengeState.NOT_OPENED);
+        Optional<Challenge> optionalCurrentChallenge = challengeRepository.findChallengeByState(ChallengeState.PRE_OPENED);
         Optional<Challenge> optionalNextChallenge = challengeRepository.findChallengeByState(ChallengeState.OPENED);
         if (optionalCurrentChallenge.isPresent()) {
             Challenge currentChallenge = optionalCurrentChallenge.get();
@@ -96,8 +96,8 @@ public class ChallengeService {
     }
 
     @Transactional(readOnly = true)
-    public List<ParticipationResponseDto> getParticipateList(Long memberId, Long cursor, Long limit) {
-        List<ParticipationResponseDto> participateList = participationDao.getParticipateList(memberId, cursor, limit);
+    public List<ParticipationResponseDto> getParticipateList(Long memberId, Long cursor, Long size) {
+        List<ParticipationResponseDto> participateList = participationDao.getParticipateList(memberId, cursor, size);
         participateList.forEach(participationResponseDto -> {
             List<Plan> planList = planRepository.findByParticipationId(participationResponseDto.getParticipationId());
             participationResponseDto.setPlanList(planList);

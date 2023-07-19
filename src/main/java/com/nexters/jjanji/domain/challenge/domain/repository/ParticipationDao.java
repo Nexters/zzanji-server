@@ -23,7 +23,7 @@ public class ParticipationDao {
         this.queryFactory = queryFactory;
     }
 
-    public List<ParticipationResponseDto> getParticipateList(Long memberId, Long cursor, Long limit) {
+    public List<ParticipationResponseDto> getParticipateList(Long memberId, Long cursor, Long size) {
         return queryFactory
                 .select(new QParticipationResponseDto(
                         participation.challenge.id,
@@ -44,7 +44,7 @@ public class ParticipationDao {
                         cursorPagination(cursor)
                 )
                 .orderBy(participation.id.desc())
-                .limit(limit)
+                .limit(size)
                 .fetch();
     }
 
