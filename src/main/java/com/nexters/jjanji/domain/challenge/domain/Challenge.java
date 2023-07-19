@@ -57,7 +57,7 @@ public class Challenge {
 
     private Long calculateChallengeWeek(LocalDateTime startAt) {
         // ISO-8601
-        return (long) startAt.get(WeekFields.ISO.weekOfYear());
+        return (long) startAt.getDayOfMonth() / 7 + 1;
     }
 
     public void closeChallenge() {
