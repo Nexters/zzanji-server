@@ -1,7 +1,7 @@
 package com.nexters.jjanji.global.exception.exhandler;
 
-import com.nexters.jjanji.global.exception.NotExistPlanException;
-import jakarta.servlet.http.HttpServletResponse;
+import com.nexters.jjanji.global.exception.BaseException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(annotations = RestController.class)
 public class BaseExControllerAdvice {
 
-    @ExceptionHandler(NotExistPlanException.class)
-    public String NotExistPlan(NotExistPlanException e, HttpServletResponse response){
-        response.setStatus(e.getStatus().value());
-
-        log.info(e.getMessage());
-        return e.getShowMessage();
+    @ExceptionHandler(BaseException.class)
+    public ExceptionResponse baseExceptionHandler(BaseException e, HttpServletRequest request){
+        log.warn("[BaseException 발생] request url: {}", request.getRequestURI(), e);
+        return new ExceptionResponse(e.getMessage());
     }
 
 }
