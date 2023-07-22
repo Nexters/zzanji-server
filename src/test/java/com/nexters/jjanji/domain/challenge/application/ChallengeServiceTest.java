@@ -7,6 +7,7 @@ import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationReposi
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
+import com.nexters.jjanji.domain.challenge.dto.request.UpdateGoalAmountRequestDto;
 import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -128,6 +129,20 @@ class ChallengeServiceTest {
         Assertions.assertThatThrownBy(() -> {
             challengeService.addCategoryPlan(1L, request);
         }).isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    @DisplayName("전체 목표 금액 수정 - 성공")
+    void updateTotalGoalAmount() {
+        // given
+        Participation mockParticipation = new Participation();
+        UpdateGoalAmountRequestDto updateGoalAmountRequestDto = UpdateGoalAmountRequestDto.builder()
+                .goalAmount(10000L)
+                .build();
+        given(participationRepository.findByMemberAndChallenge(any(), any())).willReturn(Optional.of(mockParticipation));
+
+        // when, then
+        challengeService.updateTotalGoalAmount(1L, updateGoalAmountRequestDto);
     }
 
 }
