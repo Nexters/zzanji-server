@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SpendingDetail {
 
+    private Long spendingId;
     private String title;
     private String memo;
     private Long spendAmount;

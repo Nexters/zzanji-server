@@ -12,5 +12,6 @@ import java.util.List;
 public class SpendingDetailResponse {
     private Long goalAmount;
     private Long spendAmount;
+    private Boolean hasNext;
     private List<SpendingDetail> spendingList;
 }

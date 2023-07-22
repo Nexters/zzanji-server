@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.SliceImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -70,14 +72,16 @@ class SpendingHistoryServiceTest {
         Plan plan = Plan.builder().category(PlanCategory.FOOD).categoryGoalAmount(3000L).build();
         SpendingHistory spending1 = SpendingHistory.builder().plan(plan).title("커피").memo("스타벅스").spendAmount(1000L).build();
         SpendingHistory spending2 = SpendingHistory.builder().plan(plan).title("커피").memo("투썸").spendAmount(2000L).build();
+        PageRequest pageRequest = PageRequest.ofSize(3);
+        List<SpendingHistory> content = List.of(spending1, spending2);
 
         given(planRepository.findById(1L))
                 .willReturn(Optional.of(plan));
-        given(spendingHistoryRepository.findByPlan(plan))
-                .willReturn(List.of(spending1, spending2));
+        given(spendingHistoryRepository.findCursorSliceByPlan(plan, 1L, pageRequest))
+                .willReturn(new SliceImpl<>(content, pageRequest, true));
 
         //when
-        SpendingDetailResponse spendingList = spendingHistoryService.findSpendingList(1L);
+        SpendingDetailResponse spendingList = spendingHistoryService.findSpendingList(1L, 1L, pageRequest);
 
         //then
         assertAll(
@@ -89,12 +93,13 @@ class SpendingHistoryServiceTest {
                 () -> assertThat(spendingList.getSpendingList().get(0).getSpendAmount()).isEqualTo(spending1.getSpendAmount()),
                 () -> assertThat(spendingList.getSpendingList().get(1).getTitle()).isEqualTo(spending2.getTitle()),
                 () -> assertThat(spendingList.getSpendingList().get(1).getMemo()).isEqualTo(spending2.getMemo()),
-                () -> assertThat(spendingList.getSpendingList().get(1).getSpendAmount()).isEqualTo(spending2.getSpendAmount())
+                () -> assertThat(spendingList.getSpendingList().get(1).getSpendAmount()).isEqualTo(spending2.getSpendAmount()),
+                () -> assertThat(spendingList.getHasNext()).isTrue()
         );
 
         //verify
         verify(planRepository, times(1)).findById(1L);
-        verify(spendingHistoryRepository, times(1)).findByPlan(plan);
+        verify(spendingHistoryRepository, times(1)).findCursorSliceByPlan(plan, 1L, pageRequest);
     }
 
 }

@@ -9,6 +9,8 @@ import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetail;
 import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetailResponse;
 import com.nexters.jjanji.global.exception.NotExistPlanException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,14 +38,16 @@ public class SpendingHistoryService {
         findPlan.plusCategorySpendAmount(dto.getSpendAmount());
     }
 
-    public SpendingDetailResponse findSpendingList(Long planId){
+    public SpendingDetailResponse findSpendingList(Long planId, Long cursorId, Pageable pageable){
         Plan findPlan = validAndGetPlan(planId);
 
-        List<SpendingDetail> spendingDetailsDto = spendingHistoryRepository.findByPlan(findPlan).stream()
-                .map(sp -> new SpendingDetail(sp.getTitle(), sp.getMemo(), sp.getSpendAmount()))
+        Slice<SpendingHistory> spendingList = spendingHistoryRepository.findCursorSliceByPlan(findPlan, cursorId, pageable);
+
+        List<SpendingDetail> spendingDetailsDtos = spendingList.getContent().stream()
+                .map(sp -> new SpendingDetail(sp.getId(), sp.getTitle(), sp.getMemo(), sp.getSpendAmount()))
                 .collect(Collectors.toList());
 
-        return new SpendingDetailResponse(findPlan.getCategoryGoalAmount(), findPlan.getCategorySpendAmount(), spendingDetailsDto);
+        return new SpendingDetailResponse(findPlan.getCategoryGoalAmount(), findPlan.getCategorySpendAmount(), spendingList.hasNext(), spendingDetailsDtos);
     }
 
     private Plan validAndGetPlan(Long planId){
