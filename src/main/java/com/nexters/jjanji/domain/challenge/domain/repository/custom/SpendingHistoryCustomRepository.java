@@ -7,5 +7,5 @@ import org.springframework.data.domain.Slice;
 
 public interface SpendingHistoryCustomRepository {
     Slice<SpendingHistory> findOffsetSliceByPlan(Plan plan, Pageable pageable);
-    Slice<SpendingHistory> findCursorSliceByPlan(Long lastSpendingId, Plan plan, Pageable pageable);
+    Slice<SpendingHistory> findCursorSliceByPlan(Plan plan, Long lastSpendingId, Pageable pageable);
 }

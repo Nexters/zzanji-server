@@ -18,13 +18,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Transactional
 class SpendingHistoryCustomRepositoryImplTest {
     @Autowired SpendingHistoryRepository spendingHistoryRepository;
     @Autowired PlanRepository planRepository;
 
     @Test
-    @DisplayName("소비 내역 리스트 10개 중 두번째 최신 3개를 조회에 성공하다. - offset slice")
-    @Transactional
+    @DisplayName("소비 내역 리스트 10개 중 두번째 페이지 최신 3개를 조회에 성공하다. - offset slice")
     void findSpendingList_offsetSice(){
         //given
         final Plan plan = planRepository.save(Plan.builder().category(PlanCategory.FOOD).categoryGoalAmount(5000L).build());
@@ -54,11 +54,7 @@ class SpendingHistoryCustomRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("소비 내역 리스트 10개 중 두번째 최신 3개를 조회에 성공하다. - cursor slice")
-    @Transactional
-    /**
-     * 클래스에 선언하는 @Transactional vs 메서드에 선언하는 @Transactional ???????????????
-     */
+    @DisplayName("소비 내역 리스트 10개 중 두번째 페이지 최신 3개를 조회에 성공하다. - cursor slice")
     void findSpendingList_cursorSlice(){
         //given
         final Plan plan = planRepository.save(Plan.builder().category(PlanCategory.FOOD).categoryGoalAmount(5000L).build());
@@ -76,7 +72,7 @@ class SpendingHistoryCustomRepositoryImplTest {
         PageRequest page = PageRequest.ofSize(3);
 
         //when
-        Slice<SpendingHistory> result = spendingHistoryRepository.findCursorSliceByPlan(spending8.getId(), plan, page);
+        Slice<SpendingHistory> result = spendingHistoryRepository.findCursorSliceByPlan(plan, spending8.getId(), page);
 
         //then
         assertThat(result.hasNext()).isTrue();

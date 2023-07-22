@@ -41,7 +41,7 @@ public class SpendingHistoryCustomRepositoryImpl implements SpendingHistoryCusto
      * no-offset 방식 사용 버전
      */
     @Override
-    public Slice<SpendingHistory> findCursorSliceByPlan(Long lastSpendingId, Plan plan, Pageable pageable) {
+    public Slice<SpendingHistory> findCursorSliceByPlan(Plan plan, Long lastSpendingId, Pageable pageable) {
         List<SpendingHistory> content = jpaQueryFactory.selectFrom(spendingHistory)
                 .where(
                         spendingHistory.plan.eq(plan),
