@@ -10,6 +10,7 @@ import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationReposi
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
+import com.nexters.jjanji.domain.challenge.dto.request.UpdateGoalAmountRequestDto;
 import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
@@ -32,8 +33,7 @@ import java.util.List;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -219,6 +219,47 @@ class ChallengeControllerTest extends RestDocs {
                                 fieldWithPath("[].planList[].category").type(JsonFieldType.STRING).description("카테고리 이름"),
                                 fieldWithPath("[].planList[].categoryGoalAmount").type(JsonFieldType.NUMBER).description("카테고리별 목표 금액"),
                                 fieldWithPath("[].planList[].categorySpendAmount").type(JsonFieldType.NUMBER).description("카테고리별 소비 금액")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("챌린지 API - 다음 챌린지의 총 목표 금액 수정")
+    void updateTotalGoalAmount() throws Exception {
+        //given
+        Challenge challenge = challengeRepository.save(
+                Challenge.builder()
+                        .startAt(LocalDateTime.now())
+                        .endAt(LocalDateTime.now().plusDays(7))
+                        .build()
+        );
+
+        participationRepository.save(
+                Participation.builder()
+                        .challenge(challenge)
+                        .goalAmount(10000L)
+                        .member(memberRepository.getReferenceById(testMemberId))
+                        .build()
+        );
+
+        UpdateGoalAmountRequestDto request = UpdateGoalAmountRequestDto.builder()
+                .goalAmount(20000L)
+                .build();
+
+        //when, then
+        mockMvc.perform(put("/v1/challenge/participate/goalAmount")
+                        .header(AUTHORIZATION_HEADER, DEVICE_ID)
+                        .header("Content-Type", "application/json")
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andDo(document("challenge/participate/goalAmount/PUT",
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) device id")
+                        ),
+                        requestFields(
+                                fieldWithPath("goalAmount").type(JsonFieldType.NUMBER).description("수정할 목표 금액")
                         )
                 ));
     }

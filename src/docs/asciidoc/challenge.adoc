@@ -99,3 +99,29 @@ Response HTTP Example
 
 *정상*
 include::{snippets}/challenge/plan/category/POST/http-response.adoc[]
+
+=== 다음 챌린지의 총 목표 금액 수정
+
+다음 챌린지의 다음 챌린지의 총 목표 금액 수정합니다.
+
+==== 발생 가능 예외
+4xx - 아직 챌린지에 참여하지 않았습니다.
+
+==== 요청
+HTTP Example
+
+include::{snippets}/challenge/participate/goalAmount/PUT/http-request.adoc[]
+
+Request Header
+
+include::{snippets}/challenge/participate/goalAmount/PUT/request-headers.adoc[]
+
+Request Body
+
+include::{snippets}/challenge/participate/goalAmount/PUT/request-fields.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/challenge/participate/goalAmount/PUT/http-response.adoc[]
