@@ -38,8 +38,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -104,10 +103,10 @@ class SpendingHistoryControllerTest extends RestDocs {
                 .andDo(document("challenge/plan/spending/POST",
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
-                                headerWithName(AUTHORIZATION_HEADER).description("device Id (필수값)")
+                                headerWithName(AUTHORIZATION_HEADER).description("(필수) device Id")
                         ),
                         pathParameters(
-                                parameterWithName("planId").description("plan 고유 pk")
+                                parameterWithName("planId").description("(필수) planId(PK)")
                         ),
                         requestFields(
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
@@ -121,42 +120,68 @@ class SpendingHistoryControllerTest extends RestDocs {
     @DisplayName("지출 내역 리스트 API 호출 성공")
     void findSpendingList() throws Exception {
         //given
-        final Long amount1 = 1000L;
-        final Long amount2 = 2000L;
+        final Integer size = 3;
+        final Long amount1 = 500L;
+        final Long amount2 = 800L;
+        final Long amount3 = 1000L;
+        final Long amount4 = 1100L;
+        final Long amount5 = 1200L;
         Plan plan = planRepository.findById(planId).get();
 
+        //
         SpendingHistory spending1 = createSpendingHistory(plan, "커피", "스타벅스", amount1);
         plan.plusCategorySpendAmount(spending1.getSpendAmount());
-
         SpendingHistory spending2 = createSpendingHistory(plan, "커피", "엔젤리너스", amount2);
         plan.plusCategorySpendAmount(spending2.getSpendAmount());
+        SpendingHistory spending3 = createSpendingHistory(plan, "커피", "투썸", amount3);
+        plan.plusCategorySpendAmount(spending3.getSpendAmount());
+        SpendingHistory spending4 = createSpendingHistory(plan, "커피", "백다방", amount4);
+        plan.plusCategorySpendAmount(spending4.getSpendAmount());
+        SpendingHistory spending5 = createSpendingHistory(plan, "커피", "mess", amount5);
+        plan.plusCategorySpendAmount(spending5.getSpendAmount());
+
 
         //when & then
         mockMvc.perform(RestDocumentationRequestBuilders.get("/v1/challenge/plan/{planId}/spending", planId)
                         .header(AUTHORIZATION_HEADER, DEVICE_ID)
+                        .param("cursorId", String.valueOf(spending4.getId()))
+                        .param("size", String.valueOf(size))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.goalAmount").value(plan.getCategoryGoalAmount()))
-                .andExpect(jsonPath("$.spendAmount").value(amount1+amount2))
-                .andExpect(jsonPath("$.spendingList[0].title").value(spending1.getTitle()))
-                .andExpect(jsonPath("$.spendingList[0].memo").value(spending1.getMemo()))
-                .andExpect(jsonPath("$.spendingList[0].spendAmount").value(spending1.getSpendAmount()))
+                .andExpect(jsonPath("$.spendAmount").value(amount1+amount2+amount3+amount4+amount5))
+                .andExpect(jsonPath("$.hasNext").value(false))
+                .andExpect(jsonPath("$.spendingList[0].spendingId").value(spending3.getId()))
+                .andExpect(jsonPath("$.spendingList[0].title").value(spending3.getTitle()))
+                .andExpect(jsonPath("$.spendingList[0].memo").value(spending3.getMemo()))
+                .andExpect(jsonPath("$.spendingList[0].spendAmount").value(spending3.getSpendAmount()))
+                .andExpect(jsonPath("$.spendingList[1].spendingId").value(spending2.getId()))
                 .andExpect(jsonPath("$.spendingList[1].title").value(spending2.getTitle()))
                 .andExpect(jsonPath("$.spendingList[1].memo").value(spending2.getMemo()))
                 .andExpect(jsonPath("$.spendingList[1].spendAmount").value(spending2.getSpendAmount()))
+                .andExpect(jsonPath("$.spendingList[2].spendingId").value(spending1.getId()))
+                .andExpect(jsonPath("$.spendingList[2].title").value(spending1.getTitle()))
+                .andExpect(jsonPath("$.spendingList[2].memo").value(spending1.getMemo()))
+                .andExpect(jsonPath("$.spendingList[2].spendAmount").value(spending1.getSpendAmount()))
                 .andDo(print())
                 //Rest docs 문서화
                 .andDo(document("challenge/plan/spending/GET",
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
-                                headerWithName(AUTHORIZATION_HEADER).description("device Id (필수값)")
+                                headerWithName(AUTHORIZATION_HEADER).description("(필수) device Id")
                         ),
                         pathParameters(
-                                parameterWithName("planId").description("plan 고유 pk")
+                                parameterWithName("planId").description("(필수) planId(PK)")
+                        ),
+                        queryParameters(
+                                parameterWithName("cursorId").description("(선택) 마지막 spendingId(PK) 값, 첫 요청이라면 NULL"),
+                                parameterWithName("size").description("(필수) 페이지 사이즈")
                         ),
                         responseFields(
                                 fieldWithPath("goalAmount").type(JsonFieldType.NUMBER).description("이번주 카테고리 목표 금액"),
                                 fieldWithPath("spendAmount").type(JsonFieldType.NUMBER).description("현재 카테고리 총 지출 금액"),
+                                fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("다음 페이지 소비 내역 존배 여부"),
+                                fieldWithPath("spendingList[].spendingId").type(JsonFieldType.NUMBER).description("지출 내역 Id(PK)"),
                                 fieldWithPath("spendingList[].title").type(JsonFieldType.STRING).description("지출 내역 제목"),
                                 fieldWithPath("spendingList[].memo").type(JsonFieldType.STRING).description("지출 내역 메모"),
                                 fieldWithPath("spendingList[].spendAmount").type(JsonFieldType.NUMBER).description("지출 내역 금액")

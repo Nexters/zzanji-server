@@ -26,7 +26,7 @@ include::{snippets}/challenge/plan/spending/POST/request-fields.adoc[]
 include::{snippets}/challenge//plan/spending/POST/http-response.adoc[]
 
 
-=== 카테고리별 소비 내역 리스트 조회
+=== 카테고리별 소비 내역 리스트 조회(무한스크롤)
 카테고리별 소비 내역 리스트를 조회합니다.
 
 ==== 발생 가능한 예외
@@ -42,6 +42,8 @@ include::{snippets}/challenge/plan/spending/GET/request-headers.adoc[]
 *Request Path*
 include::{snippets}/challenge/plan/spending/GET/path-parameters.adoc[]
 
+*Query-Parameters*
+include::{snippets}/challenge/plan/spending/GET/query-parameters.adoc[]
 
 ===== 응답
 *Http Response Example*

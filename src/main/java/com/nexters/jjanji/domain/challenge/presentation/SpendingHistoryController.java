@@ -4,6 +4,8 @@ import com.nexters.jjanji.domain.challenge.application.SpendingHistoryService;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingSaveDto;
 import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetailResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +22,10 @@ public class SpendingHistoryController {
     }
 
     @GetMapping("/{planId}/spending")
-    public ResponseEntity<SpendingDetailResponse> spendingList(@PathVariable Long planId){
-        SpendingDetailResponse spendingList = spendingHistoryService.findSpendingList(planId);
+    public ResponseEntity<SpendingDetailResponse> spendingList(@PathVariable Long planId,
+                                                               @RequestParam(required = false) Long cursorId,
+                                                               @RequestParam Integer size){
+        SpendingDetailResponse spendingList = spendingHistoryService.findSpendingList(planId, cursorId, PageRequest.ofSize(size));
         return ResponseEntity.ok(spendingList);
     }
 
