@@ -1,7 +1,6 @@
-package com.nexters.jjanji.domain.challenge.domain.repository.custom;
+package com.nexters.jjanji.domain.challenge.domain.repository.query;
 
 import com.nexters.jjanji.domain.challenge.domain.Plan;
-import com.nexters.jjanji.domain.challenge.domain.QSpendingHistory;
 import com.nexters.jjanji.domain.challenge.domain.SpendingHistory;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -17,7 +16,7 @@ import static com.nexters.jjanji.domain.challenge.domain.QSpendingHistory.spendi
 
 @Repository
 @RequiredArgsConstructor
-public class SpendingHistoryCustomRepositoryImpl implements SpendingHistoryCustomRepository {
+public class SpendingHistoryQueryRepositoryImpl implements SpendingHistoryQueryRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     /**

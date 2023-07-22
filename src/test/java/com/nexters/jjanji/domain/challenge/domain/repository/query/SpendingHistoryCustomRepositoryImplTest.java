@@ -1,4 +1,4 @@
-package com.nexters.jjanji.domain.challenge.domain.repository.custom;
+package com.nexters.jjanji.domain.challenge.domain.repository.query;
 
 import com.nexters.jjanji.domain.challenge.domain.Plan;
 import com.nexters.jjanji.domain.challenge.domain.SpendingHistory;
