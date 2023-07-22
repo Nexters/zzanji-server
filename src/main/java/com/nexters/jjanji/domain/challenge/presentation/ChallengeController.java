@@ -3,12 +3,14 @@ package com.nexters.jjanji.domain.challenge.presentation;
 import com.nexters.jjanji.domain.challenge.application.ChallengeService;
 import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
+import com.nexters.jjanji.domain.challenge.dto.request.UpdateGoalAmountRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.response.ParticipationResponseDto;
 import com.nexters.jjanji.global.auth.MemberContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +29,12 @@ public class ChallengeController {
     public List<ParticipationResponseDto> getParticipateList(@RequestParam(required = false) Long cursor, @RequestParam Long size) {
         Long memberId = MemberContext.getContext();
         return challengeService.getParticipateList(memberId, cursor, size);
+    }
+
+    @PutMapping("/participate/goalAmount")
+    public void updateGoalAmount(@RequestBody UpdateGoalAmountRequestDto updateGoalAmountRequestDto) {
+        Long memberId = MemberContext.getContext();
+        challengeService.updateTotalGoalAmount(memberId, updateGoalAmountRequestDto);
     }
 
     @PostMapping("/participate")
