@@ -113,7 +113,7 @@ public class ChallengeService {
         Member member = memberRepository.getReferenceById(memberId);
         Challenge nextChallenge = challengeRepository.findNextChallenge();
         Participation participation = participationRepository.findByMemberAndChallenge(member, nextChallenge)
-                .orElseThrow(() -> new IllegalStateException("아직 챌린지에 참여하지 않았습니다."));
+                .orElseThrow(NotParticipateException::new);
         participation.updateGoalAmount(updateGoalAmountRequestDto.getGoalAmount());
     }
 }
