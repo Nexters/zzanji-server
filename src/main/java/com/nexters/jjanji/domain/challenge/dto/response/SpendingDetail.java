@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SpendingDetail {
 
     private Long spendingId;
@@ -16,11 +17,6 @@ public class SpendingDetail {
     private Long spendAmount;
 
     public static SpendingDetail from(SpendingHistory spendingHistory){
-        SpendingDetail spendingDetail = new SpendingDetail();
-        spendingDetail.spendingId = spendingHistory.getId();
-        spendingDetail.title = spendingHistory.getTitle();
-        spendingDetail.memo = spendingHistory.getMemo();
-        spendingDetail.spendAmount = spendingHistory.getSpendAmount();
-        return spendingDetail;
+        return new SpendingDetail(spendingHistory.getId(), spendingHistory.getTitle(), spendingHistory.getMemo(), spendingHistory.getSpendAmount());
     }
 }
