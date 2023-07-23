@@ -5,7 +5,7 @@ import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.SpendingHistoryRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingSaveDto;
 import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
-import com.nexters.jjanji.global.exception.NotExistPlanException;
+import com.nexters.jjanji.global.exception.PlanNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,6 +54,6 @@ class SpendingHistoryServiceTest {
         //when & then
         assertThatThrownBy(() -> {
             spendingHistoryService.addSpendingHistory(1L, saveDto);
-        }).isInstanceOf(NotExistPlanException.class);
+        }).isInstanceOf(PlanNotFoundException.class);
     }
 }
