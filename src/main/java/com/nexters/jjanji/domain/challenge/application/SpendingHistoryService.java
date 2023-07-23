@@ -59,30 +59,36 @@ public class SpendingHistoryService {
 
     @Transactional
     public Long editSpendingHistory(Long planId, Long spendingId, SpendingEditDto dto){
-        //현재 챌린지일 경우에만 소비 내역 수정 가능.
-        Challenge findChallenge = challengeRepository.findChallengeByPlanId(planId)
-                .orElseThrow(() -> new PlanChallengeNotFoundException(planId));
+        Challenge findChallenge = validAndGetChallengeByPlanId(planId);
+        //현재 챌린지 일 경우에만 소비 내역 수정 가능.
         if(!findChallenge.isOpenedChallenge()){
             throw new SpendingPeriodInvalidException(spendingId);
         }
 
-        Plan findPlan = planRepository.findById(planId)
-                .orElseThrow(() -> new PlanNotFoundException(planId));
+        Plan findPlan = validAndGetPlan(planId);
 
         //소비 내역 수정
-        SpendingHistory findSpending = spendingHistoryRepository.findById(spendingId)
-                .orElseThrow(() -> new SpendingNotFoundExcpetion(spendingId));
+        SpendingHistory findSpending = validAndGetSpendingHistory(spendingId);
         final Long newCategorySpendAmount = findPlan.getCategorySpendAmount() - findSpending.getSpendAmount() + dto.getSpendAmount();
         findSpending.updateSpending(dto.getTitle(), dto.getMemo(), dto.getSpendAmount());
 
-        //카테고리 "categorySpendAmount" 필드 업데이트
+        //카테고리 필드 업데이트
         findPlan.updateCategorySpendAmount(newCategorySpendAmount);
 
         return findSpending.getId();
     }
 
     private Plan validAndGetPlan(Long planId){
-        return planRepository.findById(planId).orElseThrow(() -> new PlanNotFoundException(planId));
+        return planRepository.findById(planId)
+                .orElseThrow(() -> new PlanNotFoundException(planId));
+    }
+    private Challenge validAndGetChallengeByPlanId(Long planId){
+        return challengeRepository.findChallengeByPlanId(planId)
+                .orElseThrow(() -> new PlanChallengeNotFoundException(planId));
+    }
+    private SpendingHistory validAndGetSpendingHistory(Long spendingId){
+        return spendingHistoryRepository.findById(spendingId)
+                .orElseThrow(() -> new SpendingNotFoundExcpetion(spendingId));
     }
 }
 
