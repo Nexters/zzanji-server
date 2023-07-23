@@ -1,6 +1,7 @@
 package com.nexters.jjanji.domain.challenge.presentation;
 
 import com.nexters.jjanji.domain.challenge.application.SpendingHistoryService;
+import com.nexters.jjanji.domain.challenge.dto.request.SpendingEditDto;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingSaveDto;
 import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetailResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,12 @@ public class SpendingHistoryController {
                                                                @RequestParam Integer size){
         SpendingDetailResponse spendingList = spendingHistoryService.findSpendingList(planId, cursorId, PageRequest.ofSize(size));
         return ResponseEntity.ok(spendingList);
+    }
+
+    @PutMapping("/{planId}/spending/{spendingId}")
+    public ResponseEntity editSpending(@PathVariable Long planId, @PathVariable Long spendingId, @RequestBody SpendingEditDto dto){
+        spendingHistoryService.editSpendingHistory(planId, spendingId, dto);
+        return ResponseEntity.ok().build();
     }
 
 }

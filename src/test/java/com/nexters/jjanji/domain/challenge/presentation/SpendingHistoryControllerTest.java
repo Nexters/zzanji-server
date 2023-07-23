@@ -12,6 +12,7 @@ import com.nexters.jjanji.domain.challenge.domain.repository.ChallengeRepository
 import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.SpendingHistoryRepository;
+import com.nexters.jjanji.domain.challenge.dto.request.SpendingEditDto;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingSaveDto;
 import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
 import com.nexters.jjanji.domain.member.domain.Member;
@@ -82,6 +83,7 @@ class SpendingHistoryControllerTest extends RestDocs {
 
         Member member = memberRepository.save(Member.builder().deviceId(DEVICE_ID).build());
         Challenge challenge = challengeRepository.save(Challenge.builder().startAt(LocalDateTime.now()).endAt(LocalDateTime.now().plusDays(7)).build());
+        challenge.openChallenge();
         Participation participation = participationRepository.save(Participation.builder().member(member).challenge(challenge).goalAmount(10000L).build());
         planId = planRepository.save(Plan.builder().participation(participation).category(PlanCategory.FOOD).categoryGoalAmount(5000L).build()).getId();
     }
@@ -112,6 +114,42 @@ class SpendingHistoryControllerTest extends RestDocs {
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
                                 fieldWithPath("memo").type(JsonFieldType.STRING).description("메모"),
                                 fieldWithPath("spendAmount").type(JsonFieldType.NUMBER).description("소비 금액")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("지출 내역 수정 API 호출 성공")
+    void editSpendingHistory() throws Exception {
+        //given
+        final Long amount = 1000L;
+        final Long editAmount = 500L;
+        Plan plan = planRepository.findById(planId).get();
+        SpendingHistory spending = createSpendingHistory(plan, "커피", "스타벅스", amount);
+        plan.plusCategorySpendAmount(spending.getSpendAmount());
+
+        final SpendingEditDto dto = new SpendingEditDto("커피", "엔젤리너스", editAmount);
+
+        //when & then
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/v1/challenge/plan/{planId}/spending/{spendingId}", planId, spending.getId())
+                        .header(AUTHORIZATION_HEADER, DEVICE_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(dto)))
+                .andExpect(status().isOk())
+                //Rest docs 문서화
+                .andDo(document("challenge/plan/spending/PUT",
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER).description("(필수) device Id")
+                        ),
+                        pathParameters(
+                                parameterWithName("planId").description("(필수) planId(PK)"),
+                                parameterWithName("spendingId").description("(필수) spendingId(PK)")
+                        ),
+                        requestFields(
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("변경할 제목"),
+                                fieldWithPath("memo").type(JsonFieldType.STRING).description("변경할 메모"),
+                                fieldWithPath("spendAmount").type(JsonFieldType.NUMBER).description("변경할 소비 금액")
                         )
                 ));
     }
