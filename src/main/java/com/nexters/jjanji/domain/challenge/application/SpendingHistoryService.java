@@ -44,7 +44,7 @@ public class SpendingHistoryService {
         Slice<SpendingHistory> spendingList = spendingHistoryRepository.findCursorSliceByPlan(findPlan, cursorId, pageable);
 
         List<SpendingDetail> spendingDetailsDtos = spendingList.getContent().stream()
-                .map(sp -> new SpendingDetail(sp.getId(), sp.getTitle(), sp.getMemo(), sp.getSpendAmount()))
+                .map(sp -> SpendingDetail.from(sp))
                 .collect(Collectors.toList());
 
         return new SpendingDetailResponse(findPlan.getCategoryGoalAmount(), findPlan.getCategorySpendAmount(), spendingList.hasNext(), spendingDetailsDtos);
