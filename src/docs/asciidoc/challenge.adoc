@@ -72,13 +72,19 @@ include::{snippets}/challenge/participate/POST/http-response.adoc[]
 
 ==== 현재 지원 카테고리
 
-현재는 다음 카테고리를 지원합니다.
+현재는 다음 명시된 카테고리를 지원합니다.
 
-기획 확정 이후에 추가 예정입니다.
+요청 / 응답 모두 대문자로 처리됩니다.
 
 |===
-|FOOD |식비
-|TRANSPORTATION |교통비
+|FOOD|식비|
+|EATOUT|외식비|
+|COFFEE|커피·간식비|
+|TRANSPORTATION|교통·유류비|
+|LIVING|생활용품|
+|BEAUTY|의류·미용비|
+|CULTURE|문화비|
+|NESTEGG|비상금|
 |===
 
 ==== 요청
