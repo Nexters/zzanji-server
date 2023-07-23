@@ -8,9 +8,9 @@ public class PlanNotFoundException extends BaseException{
 
     public PlanNotFoundException(Long planId) {
         super(
-                String.format("해당 카테고리가 존재하지 않습니다. Id = {%d}", planId),
-                "계획된 카테고리 정보가 없습니다.",
-                HttpStatus.BAD_REQUEST
+                HttpStatus.NOT_FOUND,
+                String.format("해당 카테고리가 존재하지 않습니다. Id = {%d}", planId)
         );
+
     }
 }

@@ -14,6 +14,8 @@ import com.nexters.jjanji.domain.challenge.dto.response.ParticipationResponseDto
 import com.nexters.jjanji.domain.challenge.specification.ChallengeState;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
+import com.nexters.jjanji.global.exception.AlreadyParticipateException;
+import com.nexters.jjanji.global.exception.NotParticipateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +70,7 @@ public class ChallengeService {
         Member member = memberRepository.getReferenceById(memberId);
         Challenge nextChallenge = challengeRepository.findNextChallenge();
         if (participationRepository.existsByMemberAndChallenge(member, nextChallenge)) {
-            throw new IllegalStateException("이미 다음 챌린지에 참여중입니다.");
+            throw new AlreadyParticipateException();
         }
         Participation participation = Participation.builder()
                 .member(member)
@@ -83,7 +85,7 @@ public class ChallengeService {
         Member member = memberRepository.getReferenceById(memberId);
         Challenge nextChallenge = challengeRepository.findNextChallenge();
         Participation participation = participationRepository.findByMemberAndChallenge(member, nextChallenge)
-                .orElseThrow(() -> new IllegalStateException("아직 챌린지에 참여하지 않았습니다."));
+                .orElseThrow(NotParticipateException::new);
 
         List<Plan> planList = createCategoryPlanRequestDtoList.stream()
                 .map(createCategoryPlanRequestDto -> Plan.builder()
@@ -111,7 +113,7 @@ public class ChallengeService {
         Member member = memberRepository.getReferenceById(memberId);
         Challenge nextChallenge = challengeRepository.findNextChallenge();
         Participation participation = participationRepository.findByMemberAndChallenge(member, nextChallenge)
-                .orElseThrow(() -> new IllegalStateException("아직 챌린지에 참여하지 않았습니다."));
+                .orElseThrow(NotParticipateException::new);
         participation.updateGoalAmount(updateGoalAmountRequestDto.getGoalAmount());
     }
 }
