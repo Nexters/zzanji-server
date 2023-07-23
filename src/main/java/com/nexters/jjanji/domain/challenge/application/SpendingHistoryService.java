@@ -26,7 +26,6 @@ public class SpendingHistoryService {
     @Transactional
     public void addSpendingHistory(Long planId, SpendingSaveDto dto){
         Plan findPlan = validAndGetPlan(planId);
-
         SpendingHistory createSpending = SpendingHistory.builder()
                 .title(dto.getTitle())
                 .memo(dto.getMemo())

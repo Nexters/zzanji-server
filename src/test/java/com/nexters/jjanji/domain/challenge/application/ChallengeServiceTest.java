@@ -1,6 +1,5 @@
 package com.nexters.jjanji.domain.challenge.application;
 
-import com.nexters.jjanji.domain.challenge.application.ChallengeService;
 import com.nexters.jjanji.domain.challenge.domain.Participation;
 import com.nexters.jjanji.domain.challenge.domain.repository.ChallengeRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationRepository;
@@ -10,11 +9,12 @@ import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.UpdateGoalAmountRequestDto;
 import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
+import com.nexters.jjanji.global.exception.AlreadyParticipateException;
+import com.nexters.jjanji.global.exception.NotParticipateException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -80,7 +80,7 @@ class ChallengeServiceTest {
 
         Assertions.assertThatThrownBy(() -> {
             challengeService.participateNextChallenge(1L, request);
-        }).isInstanceOf(IllegalStateException.class);
+        }).isInstanceOf(AlreadyParticipateException.class);
         then(participationRepository).should(never()).save(any());
     }
 
@@ -128,7 +128,7 @@ class ChallengeServiceTest {
         // when, then
         Assertions.assertThatThrownBy(() -> {
             challengeService.addCategoryPlan(1L, request);
-        }).isInstanceOf(IllegalStateException.class);
+        }).isInstanceOf(NotParticipateException.class);
     }
 
     @Test
