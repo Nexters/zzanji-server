@@ -12,9 +12,16 @@ import com.nexters.jjanji.global.exception.PlanNotFoundException;
 import com.nexters.jjanji.global.exception.PlanChallengeNotFoundException;
 import com.nexters.jjanji.global.exception.SpendingNotFoundExcpetion;
 import com.nexters.jjanji.global.exception.SpendingPeriodInvalidException;
+import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetail;
+import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetailResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,7 +32,7 @@ public class SpendingHistoryService {
     private final SpendingHistoryRepository spendingHistoryRepository;
     @Transactional
     public void addSpendingHistory(Long planId, SpendingSaveDto dto){
-        Plan findPlan = planRepository.findById(planId).orElseThrow(() -> new PlanNotFoundException(planId));
+        Plan findPlan = validAndGetPlan(planId);
 
         SpendingHistory createSpending = SpendingHistory.builder()
                 .title(dto.getTitle())
@@ -34,6 +41,20 @@ public class SpendingHistoryService {
                 .plan(findPlan)
                 .build();
         spendingHistoryRepository.save(createSpending);
+
+        findPlan.plusCategorySpendAmount(dto.getSpendAmount());
+    }
+
+    public SpendingDetailResponse findSpendingList(Long planId, Long cursorId, Pageable pageable){
+        Plan findPlan = validAndGetPlan(planId);
+
+        Slice<SpendingHistory> spendingList = spendingHistoryRepository.findCursorSliceByPlan(findPlan, cursorId, pageable);
+
+        List<SpendingDetail> spendingDetailsDtos = spendingList.getContent().stream()
+                .map(sp -> SpendingDetail.from(sp))
+                .collect(Collectors.toList());
+
+        return new SpendingDetailResponse(findPlan.getCategoryGoalAmount(), findPlan.getCategorySpendAmount(), spendingList.hasNext(), spendingDetailsDtos);
     }
 
     @Transactional
@@ -58,6 +79,10 @@ public class SpendingHistoryService {
         findPlan.updateCategorySpendAmount(newCategorySpendAmount);
 
         return findSpending.getId();
+    }
+
+    private Plan validAndGetPlan(Long planId){
+        return planRepository.findById(planId).orElseThrow(() -> new PlanNotFoundException(planId));
     }
 }
 
