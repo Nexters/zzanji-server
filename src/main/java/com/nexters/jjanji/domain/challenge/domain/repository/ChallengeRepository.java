@@ -14,7 +14,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
     Optional<Challenge> findChallengeByState(ChallengeState state);
 
-    @Query("select distinct c " +
+    @Query("select c " +
             "from Plan pl " +
             "join pl.participation pa on pl.id=:planId " +
             "join pa.challenge c")
