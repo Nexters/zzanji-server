@@ -77,14 +77,14 @@ include::{snippets}/challenge/participate/POST/http-response.adoc[]
 요청 / 응답 모두 대문자로 처리됩니다.
 
 |===
-|FOOD|식비|
-|EATOUT|외식비|
-|COFFEE|커피·간식비|
-|TRANSPORTATION|교통·유류비|
-|LIVING|생활용품|
-|BEAUTY|의류·미용비|
-|CULTURE|문화비|
-|NESTEGG|비상금|
+|FOOD|식비
+|EATOUT|외식비
+|COFFEE|커피·간식비
+|TRANSPORTATION|교통·유류비
+|LIVING|생활용품
+|BEAUTY|의류·미용비
+|CULTURE|문화비
+|NESTEGG|비상금
 |===
 
 ==== 요청
