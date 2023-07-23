@@ -9,6 +9,7 @@ import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationReposi
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequestDto;
+import com.nexters.jjanji.domain.challenge.dto.request.UpdateGoalAmountRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.response.ParticipationResponseDto;
 import com.nexters.jjanji.domain.challenge.specification.ChallengeState;
 import com.nexters.jjanji.domain.member.domain.Member;
@@ -103,5 +104,14 @@ public class ChallengeService {
             participationResponseDto.setPlanList(planList);
         });
         return participateList;
+    }
+
+    @Transactional
+    public void updateTotalGoalAmount(Long memberId, UpdateGoalAmountRequestDto updateGoalAmountRequestDto) {
+        Member member = memberRepository.getReferenceById(memberId);
+        Challenge nextChallenge = challengeRepository.findNextChallenge();
+        Participation participation = participationRepository.findByMemberAndChallenge(member, nextChallenge)
+                .orElseThrow(() -> new IllegalStateException("아직 챌린지에 참여하지 않았습니다."));
+        participation.updateGoalAmount(updateGoalAmountRequestDto.getGoalAmount());
     }
 }
