@@ -7,7 +7,6 @@ import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetailResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/challenge/plan")
 @RequiredArgsConstructor
 public class SpendingHistoryController {
-
     private final SpendingHistoryService spendingHistoryService;
+
     @PostMapping("/{planId}/spending")
     public ResponseEntity addSpending(@PathVariable Long planId, @Valid @RequestBody SpendingSaveDto dto){
         spendingHistoryService.addSpendingHistory(planId, dto);
