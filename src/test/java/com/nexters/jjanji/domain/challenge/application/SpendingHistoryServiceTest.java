@@ -136,7 +136,7 @@ class SpendingHistoryServiceTest {
         final SpendingEditDto dto = new SpendingEditDto("엔제리너스", "부모님", 1000L);
 
         //when
-        Long spendingId = spendingHistoryService.editSpendingHistory(1L, 1L, dto);
+        spendingHistoryService.editSpendingHistory(1L, 1L, dto);
 
         //then
         verify(challengeRepository, times(1)).findChallengeByPlanId(1L);

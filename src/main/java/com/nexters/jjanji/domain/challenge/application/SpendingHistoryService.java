@@ -57,7 +57,7 @@ public class SpendingHistoryService {
     }
 
     @Transactional
-    public Long editSpendingHistory(Long planId, Long spendingId, SpendingEditDto dto){
+    public void editSpendingHistory(Long planId, Long spendingId, SpendingEditDto dto){
         Challenge findChallenge = validAndGetChallengeByPlanId(planId);
         //현재 챌린지 일 경우에만 소비 내역 수정 가능.
         if(!findChallenge.isOpenedChallenge()){
@@ -73,8 +73,6 @@ public class SpendingHistoryService {
 
         //카테고리 필드 업데이트
         findPlan.updateCategorySpendAmount(newCategorySpendAmount);
-
-        return findSpending.getId();
     }
 
     private Plan validAndGetPlan(Long planId){
