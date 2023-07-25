@@ -111,9 +111,9 @@ class SpendingHistoryControllerTest extends RestDocs {
                                 parameterWithName("planId").description("(필수) planId(PK)")
                         ),
                         requestFields(
-                                fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
-                                fieldWithPath("memo").type(JsonFieldType.STRING).description("메모"),
-                                fieldWithPath("spendAmount").type(JsonFieldType.NUMBER).description("소비 금액")
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("(필수) 제목, 빈값 & NULL 허용 x"),
+                                fieldWithPath("memo").type(JsonFieldType.STRING).description("(선택) 메모"),
+                                fieldWithPath("spendAmount").type(JsonFieldType.NUMBER).description("(필수) 소비 금액, NULL 허용 x & 최소 1원 이상")
                         )
                 ));
     }
@@ -147,9 +147,9 @@ class SpendingHistoryControllerTest extends RestDocs {
                                 parameterWithName("spendingId").description("(필수) spendingId(PK)")
                         ),
                         requestFields(
-                                fieldWithPath("title").type(JsonFieldType.STRING).description("(필수) 변경할 제목"),
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("(필수) 변경할 제목, 빈값 & NULL 허용 x"),
                                 fieldWithPath("memo").type(JsonFieldType.STRING).description("(선택) 변경할 메모"),
-                                fieldWithPath("spendAmount").type(JsonFieldType.NUMBER).description("(필수) 변경할 소비 금액")
+                                fieldWithPath("spendAmount").type(JsonFieldType.NUMBER).description("(필수) 변경할 소비 금액, NULL 허용 x & 최소 1원 이상")
                         )
                 ));
     }
