@@ -45,4 +45,9 @@ public class SpendingHistory extends BaseTime {
         this.spendAmount = spendAmount;
     }
 
+    public void updateSpending(String title, String memo, Long spendAmount){
+        this.title = title;
+        this.memo = memo;
+        this.spendAmount = spendAmount;
+    }
 }

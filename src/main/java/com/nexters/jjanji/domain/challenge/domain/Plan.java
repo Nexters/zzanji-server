@@ -49,4 +49,5 @@ public class Plan {
     public void plusCategorySpendAmount(Long amount){
         this.categorySpendAmount += amount;
     }
+    public void updateCategorySpendAmount(Long Amount){this.categorySpendAmount = Amount;}
 }

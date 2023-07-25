@@ -74,4 +74,8 @@ public class Challenge {
         state = ChallengeState.OPENED;
     }
 
+    public Boolean isOpenedChallenge(){
+        return state.equals(ChallengeState.OPENED);
+    }
+
 }

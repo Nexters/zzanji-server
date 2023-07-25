@@ -4,7 +4,7 @@
 카테고리별 소비 내역을 입력합니다.
 
 ==== 발생 가능한 예외
-400 - 계획된 카테고리 정보가 없습니다.
+- 400 : 카테고리 정보가 존재하지 않습니다. planId = {planId}
 
 ==== 요청
 *HTTP Request Example*
@@ -25,12 +25,43 @@ include::{snippets}/challenge/plan/spending/POST/request-fields.adoc[]
 *200*
 include::{snippets}/challenge//plan/spending/POST/http-response.adoc[]
 
+=== 소비 내역 수정
+카테고리별 소비 내역을 수정합니다.
 
-=== 카테고리별 소비 내역 리스트 조회(무한스크롤)
-카테고리별 소비 내역 리스트를 조회합니다.
+- 종료되거나 아직 시작하지 않은 챌린지의 소비 내역 수정은 불가능 합니다.
 
 ==== 발생 가능한 예외
-400 - 계획된 카테고리 정보가 없습니다.
+- 400 : 카테고리에 해당하는 챌린지 정보가 없습니다. planId = {planId}
+- 400 : 소비내역 추가 및 변경이 가능한 기간이 아닙니다. spendingId = {spendingId}
+- 400 : 카테고리 정보가 존재하지 않습니다. planId = {planId}
+- 400 : 소비내역 정보가 존재하지 않습니다. spendingId = {spendingId}
+
+==== 요청
+*HTTP Request Example*
+include::{snippets}/challenge/plan/spending/PUT/http-request.adoc[]
+
+*Request Header*
+include::{snippets}/challenge/plan/spending/PUT/request-headers.adoc[]
+
+*Request Path*
+include::{snippets}/challenge/plan/spending/PUT/path-parameters.adoc[]
+
+*Request Body*
+include::{snippets}/challenge/plan/spending/PUT/request-fields.adoc[]
+
+===== 응답
+*Http Response Example*
+
+*200*
+include::{snippets}/challenge//plan/spending/PUT/http-response.adoc[]
+
+=== 카테고리별 소비 내역 리스트 조회(페이징)
+카테고리별 소비 내역 리스트를 조회합니다.
+
+- 가장 최신 소비내역 부터 보여줍니다.
+
+==== 발생 가능한 예외
+- 400 : 카테고리 정보가 존재하지 않습니다. planId = {planId}
 
 ==== 요청
 *HTTP Request Example*
