@@ -147,9 +147,9 @@ class SpendingHistoryControllerTest extends RestDocs {
                                 parameterWithName("spendingId").description("(필수) spendingId(PK)")
                         ),
                         requestFields(
-                                fieldWithPath("title").type(JsonFieldType.STRING).description("변경할 제목"),
-                                fieldWithPath("memo").type(JsonFieldType.STRING).description("변경할 메모"),
-                                fieldWithPath("spendAmount").type(JsonFieldType.NUMBER).description("변경할 소비 금액")
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("(필수) 변경할 제목"),
+                                fieldWithPath("memo").type(JsonFieldType.STRING).description("(선택) 변경할 메모"),
+                                fieldWithPath("spendAmount").type(JsonFieldType.NUMBER).description("(필수) 변경할 소비 금액")
                         )
                 ));
     }

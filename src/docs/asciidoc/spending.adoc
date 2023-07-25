@@ -55,7 +55,7 @@ include::{snippets}/challenge/plan/spending/PUT/request-fields.adoc[]
 *200*
 include::{snippets}/challenge//plan/spending/PUT/http-response.adoc[]
 
-=== 카테고리별 소비 내역 리스트 조회(무한스크롤)
+=== 카테고리별 소비 내역 리스트 조회(페이징)
 카테고리별 소비 내역 리스트를 조회합니다.
 
 - 가장 최신 소비내역 부터 보여줍니다.
