@@ -18,7 +18,7 @@ public class SpendingHistoryController {
 
     private final SpendingHistoryService spendingHistoryService;
     @PostMapping("/{planId}/spending")
-    public ResponseEntity addSpending(@PathVariable Long planId,@RequestBody SpendingSaveDto dto){
+    public ResponseEntity addSpending(@PathVariable Long planId, @Valid @RequestBody SpendingSaveDto dto){
         spendingHistoryService.addSpendingHistory(planId, dto);
         return ResponseEntity.ok().build();
     }
