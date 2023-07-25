@@ -61,6 +61,23 @@ class SpendingHistoryServiceTest {
     }
 
     @Test
+    @DisplayName("종료된 챌린지에 지출 내역 등록을 시도하다.")
+    void addSpendingHistory_finishChallenge(){
+        //given
+        final Challenge challenge = mock(Challenge.class);
+        final SpendingSaveDto dto = mock(SpendingSaveDto.class);
+
+        given(challengeRepository.findChallengeByPlanId(1L))
+                .willReturn(Optional.of(challenge));
+        given(challenge.isOpenedChallenge())
+                .willReturn(false);
+
+        //when & then
+        assertThatThrownBy(() -> spendingHistoryService.addSpendingHistory(1L, dto))
+                .isInstanceOf(SpendingPeriodInvalidException.class);
+    }
+
+    @Test
     @DisplayName("지출 내역 등록시 계획된 카테고리가 없어 예외가 발생한다.")
     void addSpendingHistory_notExistPlan(){
         //given
@@ -149,7 +166,7 @@ class SpendingHistoryServiceTest {
     }
 
     @Test
-    @DisplayName("종료된 챌린지에 지출 내역 입력을 시도하다.")
+    @DisplayName("종료된 챌린지에 지출 내역 수정을 시도하다.")
     void editSpendingHistory_finishChallenge(){
         //given
         final Challenge challenge = mock(Challenge.class);

@@ -32,6 +32,9 @@ public class SpendingHistoryService {
     private final SpendingHistoryRepository spendingHistoryRepository;
     @Transactional
     public void addSpendingHistory(Long planId, SpendingSaveDto dto){
+        Challenge findChallenge = validAndGetChallengeByPlanId(planId);
+        checkOpenChallengeAndThrow(findChallenge);
+
         Plan findPlan = validAndGetPlan(planId);
         SpendingHistory createSpending = SpendingHistory.builder()
                 .title(dto.getTitle())
@@ -59,10 +62,7 @@ public class SpendingHistoryService {
     @Transactional
     public void editSpendingHistory(Long planId, Long spendingId, SpendingEditDto dto){
         Challenge findChallenge = validAndGetChallengeByPlanId(planId);
-        //현재 챌린지 일 경우에만 소비 내역 수정 가능.
-        if(!findChallenge.isOpenedChallenge()){
-            throw new SpendingPeriodInvalidException(spendingId);
-        }
+        checkOpenChallengeAndThrow(findChallenge);
 
         Plan findPlan = validAndGetPlan(planId);
 
@@ -86,6 +86,11 @@ public class SpendingHistoryService {
     private SpendingHistory validAndGetSpendingHistory(Long spendingId){
         return spendingHistoryRepository.findById(spendingId)
                 .orElseThrow(() -> new SpendingNotFoundExcpetion(spendingId));
+    }
+    private void checkOpenChallengeAndThrow(Challenge challenge){
+        if(!challenge.isOpenedChallenge()){
+            throw new SpendingPeriodInvalidException();
+        }
     }
 }
 
