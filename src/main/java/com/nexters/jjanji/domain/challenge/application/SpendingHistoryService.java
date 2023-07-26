@@ -32,7 +32,10 @@ public class SpendingHistoryService {
     private final SpendingHistoryRepository spendingHistoryRepository;
     @Transactional
     public void addSpendingHistory(Long planId, SpendingSaveDto dto){
-        Plan findPlan = validAndGetPlan(planId);
+        Challenge findChallenge = getChallengeByPlanIdOrThrow(planId);
+        checkOpenChallengeAndThrow(findChallenge);
+
+        Plan findPlan = getPlanOrThrow(planId);
         SpendingHistory createSpending = SpendingHistory.builder()
                 .title(dto.getTitle())
                 .memo(dto.getMemo())
@@ -45,7 +48,7 @@ public class SpendingHistoryService {
     }
 
     public SpendingDetailResponse findSpendingList(Long planId, Long cursorId, Pageable pageable){
-        Plan findPlan = validAndGetPlan(planId);
+        Plan findPlan = getPlanOrThrow(planId);
 
         Slice<SpendingHistory> spendingList = spendingHistoryRepository.findCursorSliceByPlan(findPlan, cursorId, pageable);
 
@@ -58,16 +61,13 @@ public class SpendingHistoryService {
 
     @Transactional
     public void editSpendingHistory(Long planId, Long spendingId, SpendingEditDto dto){
-        Challenge findChallenge = validAndGetChallengeByPlanId(planId);
-        //현재 챌린지 일 경우에만 소비 내역 수정 가능.
-        if(!findChallenge.isOpenedChallenge()){
-            throw new SpendingPeriodInvalidException(spendingId);
-        }
+        Challenge findChallenge = getChallengeByPlanIdOrThrow(planId);
+        checkOpenChallengeAndThrow(findChallenge);
 
-        Plan findPlan = validAndGetPlan(planId);
+        Plan findPlan = getPlanOrThrow(planId);
 
         //소비 내역 수정
-        SpendingHistory findSpending = validAndGetSpendingHistory(spendingId);
+        SpendingHistory findSpending = getSpendingHistoryOrThrow(spendingId);
         final Long newCategorySpendAmount = findPlan.getCategorySpendAmount() - findSpending.getSpendAmount() + dto.getSpendAmount();
         findSpending.updateSpending(dto.getTitle(), dto.getMemo(), dto.getSpendAmount());
 
@@ -75,17 +75,22 @@ public class SpendingHistoryService {
         findPlan.updateCategorySpendAmount(newCategorySpendAmount);
     }
 
-    private Plan validAndGetPlan(Long planId){
+    private Plan getPlanOrThrow(Long planId){
         return planRepository.findById(planId)
                 .orElseThrow(() -> new PlanNotFoundException(planId));
     }
-    private Challenge validAndGetChallengeByPlanId(Long planId){
+    private Challenge getChallengeByPlanIdOrThrow(Long planId){
         return challengeRepository.findChallengeByPlanId(planId)
                 .orElseThrow(() -> new PlanChallengeNotFoundException(planId));
     }
-    private SpendingHistory validAndGetSpendingHistory(Long spendingId){
+    private SpendingHistory getSpendingHistoryOrThrow(Long spendingId){
         return spendingHistoryRepository.findById(spendingId)
                 .orElseThrow(() -> new SpendingNotFoundExcpetion(spendingId));
+    }
+    private void checkOpenChallengeAndThrow(Challenge challenge){
+        if(!challenge.isOpenedChallenge()){
+            throw new SpendingPeriodInvalidException();
+        }
     }
 }
 
