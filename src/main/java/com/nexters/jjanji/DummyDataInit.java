@@ -30,29 +30,29 @@ public class DummyDataInit {
     /**
      * <더미 데이터 요약>
      * [Challenge]
-     * - challenge1: 2023.7.17~2023.7.24 Closed
-     * - challenge2: 2023.7.24~2023.7.31 Open
-     * - challenge3: 2023.7.31~2023.8.7 Pre-Open
+     * - challengeId:1 -> 2023.7.17~2023.7.24 Closed
+     * - challengeId:2 -> 2023.7.24~2023.7.31 Open
+     * - challengeId:3 -> 2023.7.31~2023.8.7 Pre-Open
      *
      * [User]
-     * - user1: deviceId: dummyUser
+     * - memberId:1 -> deviceId:"dummyUser"
      *
      * [Participant]
-     * - participant1 user1 -> challenge1
-     * - participant2: user1 -> challenge2
+     * - participantId:1 -> memberId:1, challengeId:1
+     * - participantId:2 -> memberId:1, challengeId:2
      *
      * [Plan]
-     * - plan1: participant2 -> food(식비)
-     * - plan2: participant2 -> eatOut(외식비)
-     * - plan3: participant2 -> coffee(커피)
-     * - plan4: participant2 -> transportation(교통/유류비)
-     * - plan5: participant2 -> beauty(의류/미용비)
-     * - plan6: participant2 -> culture(문화비)
-     * - plan7: participant2 -> nestEgg(비상금)
+     * - planId:1 -> participantId:2, food(식비)
+     * - planId:2 -> participantId:2, eatOut(외식비)
+     * - planId:3 -> participantId:2, coffee(커피)
+     * - planId:4 -> participantId:2, transportation(교통/유류비)
+     * - planId:5 -> participantId:2, beauty(의류/미용비)
+     * - planId:6 -> participantId:2, culture(문화비)
+     * - planId:7 -> participantId:2, nestEgg(비상금)
      *
      * [Spending]
-     * - spending1: plan1 -> 5000원 소비
-     * - spending2: plan2 -> 5000원 소비
+     * - spendingId:1 -> planId:1, 5000원 소비
+     * - spendingId:2 -> planId:2, 5000원 소비
      * </더미>
      */
     @EventListener(ApplicationReadyEvent.class)
