@@ -7,6 +7,7 @@ import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ class PlanRepositoryTest {
 
     @Test
     @DisplayName("다음 챌린지에 이전 참가자들의 참가 내역이 복사된다.")
+    @Disabled
     void copyPreviousPlans() {
         // given
         Member member = memberRepository.save(

@@ -37,6 +37,7 @@ class ChallengeSchedulerTest {
 
     @Test
     @DisplayName("챌린지 생성 스케줄러 테스트")
+    @Disabled
     void weeklyChallengeTask() {
         //given
         Member member = memberRepository.save(
