@@ -52,7 +52,7 @@ public class DummyDataInit {
      *
      * [Spending]
      * - spendingId:1 -> planId:1, 5000원 소비
-     * - spendingId:2 -> planId:2, 5000원 소비
+     * - spendingId:2 -> planId:3, 5000원 소비
      * </더미>
      */
     @EventListener(ApplicationReadyEvent.class)
