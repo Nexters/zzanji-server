@@ -56,6 +56,13 @@ public class ChallengeService {
             }
         });
 
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            protected void doInTransactionWithoutResult(TransactionStatus status){
+                participationRepository.copyPreviousParticipate(challengeRefer.currentChallenge.getId(), challengeRefer.nextChallenge.getId());
+                planRepository.copyPreviousPlans(challengeRefer.currentChallenge.getId(), challengeRefer.nextChallenge.getId());
+            }
+        });
+
         return challengeRefer.nextChallenge;
     }
 
