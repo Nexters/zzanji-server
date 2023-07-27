@@ -38,16 +38,17 @@ public class DummyDataInit {
      * - user1: deviceId: dummyUser
      *
      * [Participant]
-     * - participant1: user -> challenge2
+     * - participant1 user1 -> challenge1
+     * - participant2: user1 -> challenge2
      *
      * [Plan]
-     * - plan1: participant1 -> food(식비)
-     * - plan2: participant1 -> eatOut(외식비)
-     * - plan3: participant1 -> coffee(커피)
-     * - plan4: participant1 -> transportation(교통/유류비)
-     * - plan5: participant1 -> beauty(의류/미용비)
-     * - plan6: participant1 -> culture(문화비)
-     * - plan7: participant1 -> nestEgg(비상금)
+     * - plan1: participant2 -> food(식비)
+     * - plan2: participant2 -> eatOut(외식비)
+     * - plan3: participant2 -> coffee(커피)
+     * - plan4: participant2 -> transportation(교통/유류비)
+     * - plan5: participant2 -> beauty(의류/미용비)
+     * - plan6: participant2 -> culture(문화비)
+     * - plan7: participant2 -> nestEgg(비상금)
      *
      * [Spending]
      * - spending1: plan1 -> 5000원 소비
@@ -79,51 +80,57 @@ public class DummyDataInit {
                 .build();
         memberRepository.save(dummyUser);
 
-        Participation dummyParticipation = Participation.builder()
+        Participation dummyParticipation1 = Participation.builder()
+                .member(dummyUser)
+                .challenge(dummyChallenge1)
+                .goalAmount(100000L)
+                .build();
+        participationRepository.save(dummyParticipation1);
+        Participation dummyParticipation2 = Participation.builder()
                 .member(dummyUser)
                 .challenge(dummyChallenge2)
                 .goalAmount(100000L)
                 .build();
-        participationRepository.save(dummyParticipation);
+        participationRepository.save(dummyParticipation2);
 
         Plan coffee = Plan.builder()
-                .participation(dummyParticipation)
+                .participation(dummyParticipation2)
                 .category(PlanCategory.COFFEE)
                 .categoryGoalAmount(20000L)
                 .build();
         planRepository.save(coffee);
         Plan food = Plan.builder()
-                .participation(dummyParticipation)
+                .participation(dummyParticipation2)
                 .category(PlanCategory.FOOD)
                 .categoryGoalAmount(20000L)
                 .build();
         planRepository.save(food);
         Plan eatOut = Plan.builder()
-                .participation(dummyParticipation)
+                .participation(dummyParticipation2)
                 .category(PlanCategory.EATOUT)
                 .categoryGoalAmount(10000L)
                 .build();
         planRepository.save(eatOut);
         Plan transportation = Plan.builder()
-                .participation(dummyParticipation)
+                .participation(dummyParticipation2)
                 .category(PlanCategory.TRANSPORTATION)
                 .categoryGoalAmount(20000L)
                 .build();
         planRepository.save(transportation);
         Plan beauty = Plan.builder()
-                .participation(dummyParticipation)
+                .participation(dummyParticipation2)
                 .category(PlanCategory.BEAUTY)
                 .categoryGoalAmount(10000L)
                 .build();
         planRepository.save(beauty);
         Plan culture = Plan.builder()
-                .participation(dummyParticipation)
+                .participation(dummyParticipation2)
                 .category(PlanCategory.CULTURE)
                 .categoryGoalAmount(15000L)
                 .build();
         planRepository.save(culture);
         Plan nestEgg = Plan.builder()
-                .participation(dummyParticipation)
+                .participation(dummyParticipation2)
                 .category(PlanCategory.NESTEGG)
                 .categoryGoalAmount(5000L)
                 .build();
