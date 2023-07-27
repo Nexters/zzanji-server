@@ -42,9 +42,9 @@ public class DummyDataInit {
      * - participantId:2 -> memberId:1, challengeId:2
      *
      * [Plan]
-     * - planId:1 -> participantId:2, food(식비)
-     * - planId:2 -> participantId:2, eatOut(외식비)
-     * - planId:3 -> participantId:2, coffee(커피)
+     * - planId:1 -> participantId:2, coffee(커피)
+     * - planId:2 -> participantId:2, food(식비)
+     * - planId:3 -> participantId:2, eatOut(외식비)
      * - planId:4 -> participantId:2, transportation(교통/유류비)
      * - planId:5 -> participantId:2, beauty(의류/미용비)
      * - planId:6 -> participantId:2, culture(문화비)
@@ -52,7 +52,7 @@ public class DummyDataInit {
      *
      * [Spending]
      * - spendingId:1 -> planId:1, 5000원 소비
-     * - spendingId:2 -> planId:3, 5000원 소비
+     * - spendingId:2 -> planId:2, 5000원 소비
      * </더미>
      */
     @EventListener(ApplicationReadyEvent.class)
