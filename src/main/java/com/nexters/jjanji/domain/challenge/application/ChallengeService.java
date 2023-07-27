@@ -25,7 +25,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -39,31 +38,24 @@ public class ChallengeService {
     private final TransactionTemplate transactionTemplate;
 
     public Challenge weeklySchedulerProcess() {
-        var challengeRefer = new Object() {
-            Challenge prevChallenge;
-            Challenge currentChallenge;
-            Challenge nextChallenge;
-        };
+        Challenge prevChallenge = challengeRepository.findChallengeByState(ChallengeState.OPENED)
+                .orElseThrow(() -> new RuntimeException("weeklySchedulerProcess| 다음 챌린지가 존재하지 않습니다."));
+        Challenge currentChallenge = challengeRepository.findChallengeByState(ChallengeState.PRE_OPENED)
+                .orElseThrow(() -> new RuntimeException("weeklySchedulerProcess| 진행중인 챌린지가 존재하지 않습니다."));
 
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                challengeRefer.prevChallenge = challengeRepository.findChallengeByState(ChallengeState.PRE_OPENED)
-                        .orElseThrow(() -> new RuntimeException("weeklySchedulerProcess| 다음 챌린지가 존재하지 않습니다."));
-                challengeRefer.currentChallenge = challengeRepository.findChallengeByState(ChallengeState.OPENED)
-                        .orElseThrow(() -> new RuntimeException("weeklySchedulerProcess| 진행중인 챌린지가 존재하지 않습니다."));
-                updateChallengesState(challengeRefer.prevChallenge, challengeRefer.currentChallenge);
-                challengeRefer.nextChallenge = createAndGetNextChallenge();
-            }
+        Challenge nextChallenge = transactionTemplate.execute(status -> {
+            updateChallengesState(prevChallenge, currentChallenge);
+            return createAndGetNextChallenge();
         });
 
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             protected void doInTransactionWithoutResult(TransactionStatus status){
-                participationRepository.copyPreviousParticipate(challengeRefer.currentChallenge.getId(), challengeRefer.nextChallenge.getId());
-                planRepository.copyPreviousPlans(challengeRefer.currentChallenge.getId(), challengeRefer.nextChallenge.getId());
+                participationRepository.copyPreviousParticipate(currentChallenge.getId(), nextChallenge.getId());
+                planRepository.copyPreviousPlans(currentChallenge.getId(), nextChallenge.getId());
             }
         });
 
-        return challengeRefer.nextChallenge;
+        return nextChallenge;
     }
 
     private Challenge createAndGetNextChallenge() {

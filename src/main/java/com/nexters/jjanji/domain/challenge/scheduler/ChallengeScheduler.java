@@ -15,7 +15,7 @@ public class ChallengeScheduler {
     private final ChallengeService challengeService;
 
     @Scheduled(cron = "0 0 0 ? * MON", zone = "Asia/Seoul")
-    public void createChallengeTask() {
+    public void weeklyChallengeTask() {
         Challenge challenge = challengeService.weeklySchedulerProcess();
         log.info("createChallengeTask|{}month {}week challenge task is completed",
                 challenge.getMonth(), challenge.getWeek());
