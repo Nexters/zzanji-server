@@ -61,16 +61,10 @@ public class Challenge {
     }
 
     public void closeChallenge() {
-        if (state != ChallengeState.OPENED) {
-            throw new RuntimeException("진행중이지 않은 챌린지는 종료될 수 없습니다.");
-        }
         state = ChallengeState.CLOSED;
     }
 
     public void openChallenge() {
-        if (state != ChallengeState.PRE_OPENED) {
-            throw new RuntimeException("진행중이지 않은 챌린지만 시작될 수 있습니다.");
-        }
         state = ChallengeState.OPENED;
     }
 

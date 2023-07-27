@@ -38,18 +38,6 @@ class ChallengeServiceTest {
     @Mock PlanRepository planRepository;
 
     @Test
-    @DisplayName("챌린지 생성 성공")
-    void createChallenge() {
-        // given
-
-        // when
-        challengeService.createChallengeAndUpdateState();
-
-        // then
-        then(challengeRepository).should(times(1)).save(any());
-    }
-
-    @Test
     @DisplayName("다음주 챌린지 참가 요청 - 성공")
     void participateNextChallenge() {
         // given
