@@ -27,25 +27,25 @@ public class ChallengeController {
 
     @GetMapping("/participate")
     public List<ParticipationResponseDto> getParticipateList(@RequestParam(required = false) Long cursor, @RequestParam Long size) {
-        Long memberId = MemberContext.getContext();
+        Long memberId = MemberContext.getMember();
         return challengeService.getParticipateList(memberId, cursor, size);
     }
 
     @PutMapping("/participate/goalAmount")
     public void updateGoalAmount(@RequestBody UpdateGoalAmountRequestDto updateGoalAmountRequestDto) {
-        Long memberId = MemberContext.getContext();
+        Long memberId = MemberContext.getMember();
         challengeService.updateTotalGoalAmount(memberId, updateGoalAmountRequestDto);
     }
 
     @PostMapping("/participate")
     public void participateNextChallenge(@Valid @RequestBody ParticipateRequestDto participateRequestDto) {
-        Long memberId = MemberContext.getContext();
+        Long memberId = MemberContext.getMember();
         challengeService.participateNextChallenge(memberId, participateRequestDto);
     }
 
     @PostMapping("/plan/category")
     public void addCategoryPlan(@RequestBody List<CreateCategoryPlanRequestDto> createCategoryPlanRequestDtoList) {
-        Long memberId = MemberContext.getContext();
+        Long memberId = MemberContext.getMember();
         challengeService.addCategoryPlan(memberId, createCategoryPlanRequestDtoList);
     }
 }
