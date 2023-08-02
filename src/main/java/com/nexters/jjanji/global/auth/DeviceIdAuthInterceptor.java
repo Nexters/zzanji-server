@@ -39,7 +39,8 @@ public class DeviceIdAuthInterceptor implements HandlerInterceptor {
         if (optionalMember.isEmpty()) {
             member = memberService.createMember(deviceId);
         }
-        MemberContext.CONTEXT.set(member.getId());
+        MemberContext.MEMBER.set(member.getId());
+        MemberContext.DEVICE.set(deviceId);
         log.info("[유저 로그인 정보] id:{}, deviceId:{}", member.getId(), member.getDeviceId());
         return true;
     }
