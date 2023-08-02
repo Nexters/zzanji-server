@@ -29,4 +29,6 @@ include::challenge.adoc[]
 
 include::spending.adoc[]
 
+include::notification.adoc[]
+
 created by zzanzi

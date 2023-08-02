@@ -1,0 +1,20 @@
+== Notification APIs
+
+=== 알람 시간 설정
+푸시 알람 시간을 설정합니다.
+
+==== 요청
+*HTTP Request Example*
+include::{snippets}/notification/config/POST/http-request.adoc[]
+
+*Request Header*
+include::{snippets}/notification/config/POST/request-headers.adoc[]
+
+*Request Body*
+include::{snippets}/notification/config/POST/request-fields.adoc[]
+
+===== 응답
+*Http Response Example*
+
+*200*
+include::{snippets}/notification/config/POST/http-response.adoc[]
