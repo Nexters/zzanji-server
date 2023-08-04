@@ -1,74 +1,92 @@
 package com.nexters.jjanji.infra.pushnotification;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.nexters.jjanji.domain.notification.specification.OperatingSystem;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.messaging.*;
+import com.nexters.jjanji.infra.pushnotification.dto.RequestPushDto;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
+/**
+ * Firebase Admin SDK 사용 버전
+ * batch 푸시
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FCMCloudMessageClient implements PushNotificationClient {
-    //HTTP v1 API 버전 사용
-    //TODO: @Value로 분리하기
-    private final String firebaseConfigPath = "firebase/firebase-adminsdk.json";
-    private final String API_URL = "https://fcm.googleapis.com/v1/projects/zzanz-8dc7d/messages:send";
-    private final String scopes = "https://www.googleapis.com/auth/cloud-platform";
-    private final String HEADER_PREFIX = "Bearer ";
-    private final ObjectMapper objectMapper;
+public class FCMCloudMessageClient implements PushNotificationClient{
+    @Value("${fcm.key.path}")
+    private String FCM_PRIVATE_KEY_PATH;
+    //메시지만 권한 설정
+    @Value("${fcm.key.scope}")
+    private String fireBaseScope;
 
-    //TODO: 예외 처리 필요!!!, throw 하지말기
-    //메시지 전송
+    //Admin 계정 인증 작업
+    //TODO: 예외처리 필요
+    @PostConstruct
+    public void init(){
+        try {
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(
+                            GoogleCredentials
+                                    .fromStream(new ClassPathResource(FCM_PRIVATE_KEY_PATH).getInputStream())
+                                    .createScoped(List.of(fireBaseScope)))
+                    .build();
+            if (FirebaseApp.getApps().isEmpty()) {
+                FirebaseApp.initializeApp(options);
+                log.info("[Firebase application has been initialized]");
+            }
+        } catch (IOException e) {
+            log.error("[Firebase Init Fail] ", e);
+        }
+    }
+
     @Override
-    public void sendNotificationTo(OperatingSystem system, String targetToken, String title, String content) throws IOException {
-        String message = makeMessage(targetToken, title, content);
+    public void pushNotificationToClients(List<RequestPushDto> dtos, PushMessage pushMessage) {
+        //메시지 만들기
+        List<Message> messages = makeMessages(dtos, pushMessage);
 
-        OkHttpClient client = new OkHttpClient();
-        RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
+        try{
+            //알림 발송
+            BatchResponse response = FirebaseMessaging.getInstance().sendAll(messages);
 
-        Request request = new Request.Builder()
-                .url(API_URL)
-                .post(requestBody)
-                .addHeader(HttpHeaders.AUTHORIZATION, HEADER_PREFIX + getAccessToken())
-                .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
-                .build();
-
-        Response response = client.newCall(request).execute();
-        log.info("FCM Message push result = ", response.body().string());
-        log.info(response.toString());
+            //요청에 대한 응답 처리
+            //Token이 Invalid할 경우 예외가 발생하지 않고 response에 응답으로 오게됨.
+            if (response.getFailureCount() > 0) {
+                List<SendResponse> responses = response.getResponses();
+                for (int i = 0; i < responses.size(); i++) {
+                    if (!responses.get(i).isSuccessful()) {
+                        log.warn("Exception : {}, Fcm Token : {}", responses.get(i).getException(), dtos.get(i).getToken());
+                    }
+                }
+            }
+        } catch (FirebaseMessagingException e) {
+            log.error("[Firebase Message Push Fail] ", e);
+        }
     }
 
-    //메세지 생성
-    private String makeMessage(String targetToken, String title, String content) throws JsonProcessingException {
-        FcmMessageDto fcmMessage = FcmMessageDto.builder()
-                .message(FcmMessageDto.Message.builder()
-                        .token(targetToken)
-                        .notification(FcmMessageDto.Notification.builder()
-                                .title(title)
-                                .body(content)
-                                .image(null)
-                                .build()
-                        ).build())
-                .validateOnly(false)
-                .build();
-        return objectMapper.writeValueAsString(fcmMessage);
-    }
-    //메세지 전송을 위한 접근 토큰 발급
-    private String getAccessToken() throws IOException {
-        GoogleCredentials googleCredentials = GoogleCredentials
-                .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
-                .createScoped(List.of(scopes));
+    private List<Message> makeMessages(List<RequestPushDto> dtos, PushMessage message){
+        String title = message.getTitle();
+        String content = message.getContent();
 
-        googleCredentials.refreshIfExpired();
-        return googleCredentials.getAccessToken().getTokenValue();
+        //추후 System 별 분기 처리 필요시 수정하기
+        return dtos.stream()
+                .map(dto ->
+                        Message.builder()
+                                .putData("time", LocalDateTime.now().toString())
+                                .setNotification(new Notification(title,content))
+                                .setToken(dto.getToken())
+                                .build())
+                .collect(Collectors.toList());
     }
 }
