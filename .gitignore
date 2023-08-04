@@ -43,4 +43,4 @@ out/
 **/resources/static/docs
 src/docs/asciidoc/rescode.adoc
 src/main/generated
-src/main/resources/firebase
+src/main/resources/firebase/
