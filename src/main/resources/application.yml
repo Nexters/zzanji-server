@@ -16,5 +16,5 @@ spring:
 
 fcm:
   key:
-    path: firebase/firebase-adminsdk.json
+    path: firebase-adminsdk.json
     scope: https://www.googleapis.com/auth/cloud-platform
