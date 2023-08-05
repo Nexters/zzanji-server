@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/v1/auth")
 public class AuthController {
 
     private static final double REQUIRED_IOS_APP_VERSION = 0.5;
     private static final double REQUIRED_ANDROID_APP_VERSION = 0.5;
 
-    @GetMapping
+    @GetMapping("/version")
     public ResponseEntity<String> validateRequiredAppVersion(@RequestParam String os, @RequestParam double appVersion) {
         if (!validateVersion(os, appVersion)) {
             return  ResponseEntity.status(HttpStatus.UPGRADE_REQUIRED).build();
