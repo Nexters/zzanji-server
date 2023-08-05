@@ -39,9 +39,9 @@ public class ChallengeService {
 
     public Challenge weeklySchedulerProcess() {
         Challenge prevChallenge = challengeRepository.findChallengeByState(ChallengeState.OPENED)
-                .orElseThrow(() -> new RuntimeException("weeklySchedulerProcess| 다음 챌린지가 존재하지 않습니다."));
-        Challenge currentChallenge = challengeRepository.findChallengeByState(ChallengeState.PRE_OPENED)
                 .orElseThrow(() -> new RuntimeException("weeklySchedulerProcess| 진행중인 챌린지가 존재하지 않습니다."));
+        Challenge currentChallenge = challengeRepository.findChallengeByState(ChallengeState.PRE_OPENED)
+                .orElseThrow(() -> new RuntimeException("weeklySchedulerProcess| 다음 챌린지가 존재하지 않습니다."));
 
         Challenge nextChallenge = transactionTemplate.execute(status -> {
             updateChallengesState(prevChallenge, currentChallenge);

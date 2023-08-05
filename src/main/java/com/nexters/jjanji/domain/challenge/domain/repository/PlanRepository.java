@@ -13,7 +13,7 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
 
     @Modifying
     @Query(value = "INSERT INTO plan (category, category_goal_amount, category_spend_amount, participation_id) " +
-                "select plan.category, plan.category_goal_amount, :nextChallengeId, " +
+                "select plan.category, plan.category_goal_amount, 0, " +
                         "(select participation_id from participation inner_p where inner_p.challenge_id = :nextChallengeId and inner_p.member_id = p.member_id) " +
                 "from plan " +
                 "join participation p on p.participation_id = plan.participation_id " +
