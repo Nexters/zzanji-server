@@ -68,6 +68,31 @@ Response HTTP Example
 *정상*
 include::{snippets}/challenge/participate/POST/http-response.adoc[]
 
+=== 챌린지 참여 내역 삭제
+
+챌린지 참여 내역을 삭제합니다.
+
+플랜 기록들도 모두 삭제됩니다.
+
+==== 요청
+HTTP Example
+
+include::{snippets}/challenge/participate/DELETE/http-request.adoc[]
+
+Request Header
+
+include::{snippets}/challenge/participate/DELETE/request-headers.adoc[]
+
+Path Parameters
+
+include::{snippets}/challenge/participate/DELETE/path-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/challenge/participate/DELETE/http-response.adoc[]
+
 === 카테고리별 계획 등록
 
 다음 챌린지의 카테고리 계획을 등록합니다.
