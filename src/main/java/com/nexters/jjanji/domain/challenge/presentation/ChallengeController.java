@@ -1,14 +1,18 @@
 package com.nexters.jjanji.domain.challenge.presentation;
 
 import com.nexters.jjanji.domain.challenge.application.ChallengeService;
+import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.UpdateGoalAmountRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.response.ParticipationResponseDto;
 import com.nexters.jjanji.global.auth.MemberContext;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,11 +28,18 @@ import java.util.List;
 public class ChallengeController {
 
     private final ChallengeService challengeService;
+    private final ParticipationRepository participationRepository;
 
     @GetMapping("/participate")
     public List<ParticipationResponseDto> getParticipateList(@RequestParam(required = false) Long cursor, @RequestParam Long size) {
         Long memberId = MemberContext.getMember();
         return challengeService.getParticipateList(memberId, cursor, size);
+    }
+
+    @DeleteMapping("/participate/{participationId}")
+    public void deleteParticipate(@PathVariable Long participationId) {
+        Long memberId = MemberContext.getMember();
+        challengeService.deleteParticipate(memberId, participationId);
     }
 
     @PutMapping("/participate/goalAmount")
