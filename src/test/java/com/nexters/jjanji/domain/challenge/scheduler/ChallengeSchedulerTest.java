@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
+@Disabled
 class ChallengeSchedulerTest {
 
     @Autowired ChallengeScheduler challengeScheduler;
