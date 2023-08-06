@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class ChallengeRepositoryTest {
     @Autowired ChallengeRepository challengeRepository;
     @Autowired MemberRepository memberRepository;
@@ -60,7 +61,6 @@ class ChallengeRepositoryTest {
 
     @Test
     @DisplayName("해당 Plan의 Challenge 조회")
-    @Transactional
     void findDistinctChallengeByPlan(){
         //given
         final LocalDateTime testDay = LocalDateTime.of(2023,7,13,0,0,0);
