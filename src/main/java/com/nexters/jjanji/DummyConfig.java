@@ -18,8 +18,8 @@ public class DummyConfig {
     private final ParticipationRepository participationRepository;
     private final PlanRepository planRepository;
     private final SpendingHistoryRepository spendingHistoryRepository;
-    @Bean
-    @Profile("dev")
+    //@Bean
+    //@Profile("dev")
     public DummyDataInit dummyDataInit(){
         return new DummyDataInit(memberRepository, challengeRepository, participationRepository, planRepository, spendingHistoryRepository);
     }
