@@ -15,6 +15,7 @@ public class NotificationService {
         NotificationInfo notificationInfo = NotificationInfo.builder()
                 .deviceId(deviceId)
                 .fcmToken(requestDto.getFcmToken())
+                .operatingSystem(requestDto.getOperatingSystem())
                 .notificationHour(requestDto.getNotificationHour())
                 .notificationMinute(requestDto.getNotificationMinute())
                 .build();
