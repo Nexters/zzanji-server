@@ -23,22 +23,7 @@ endif::[]
 }
 ```
 
-== 강제 버전 업그레이드용 헤더
-
-*Request Header*
-```
-// iOS 의 경우
-—header 'App-Version: iOS/0.5'
-
-// Android 의 경우
-—header 'App-Version: Android/0.5'
-```
-
-만약 클라이언트가 최신 버전이 아닌 경우, 426 Upgrade Required 응답을 반환합니다.
-
-link:https://developer.mozilla.org/ko/docs/Web/HTTP/Status/426[426 Upgrade Required (RFC 2817)]
-
-include::member.adoc[]
+include::auth.adoc[]
 
 include::challenge.adoc[]
 
