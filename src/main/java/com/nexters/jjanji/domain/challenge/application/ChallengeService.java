@@ -13,6 +13,7 @@ import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequest
 import com.nexters.jjanji.domain.challenge.dto.request.UpdateGoalAmountRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.response.ParticipationResponseDto;
 import com.nexters.jjanji.domain.challenge.specification.ChallengeState;
+import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
 import com.nexters.jjanji.global.exception.AlreadyParticipateException;
@@ -97,6 +98,53 @@ public class ChallengeService {
                 .goalAmount(participateRequestDto.getGoalAmount())
                 .build();
         participationRepository.save(participation);
+    }
+
+    @Transactional
+    public void testParticipate(Long memberId) {
+        Member member = memberRepository.getReferenceById(memberId);
+        Challenge currentChallenge = challengeRepository.findCurrentChallenge();
+        if (participationRepository.existsByMemberAndChallenge(member, currentChallenge)) {
+            throw new AlreadyParticipateException();
+        }
+        Participation participation = Participation.builder()
+                .member(member)
+                .challenge(currentChallenge)
+                .goalAmount(500000L)
+                .build();
+        participationRepository.save(participation);
+        planRepository.saveAll(List.of(
+                Plan.builder()
+                        .participation(participation)
+                        .category(PlanCategory.FOOD)
+                        .categoryGoalAmount(200000L)
+                        .build(),
+                Plan.builder()
+                        .participation(participation)
+                        .category(PlanCategory.BEAUTY)
+                        .categoryGoalAmount(50000L)
+                        .build(),
+                Plan.builder()
+                        .participation(participation)
+                        .category(PlanCategory.COFFEE)
+                        .categoryGoalAmount(50000L)
+                        .build(),
+                Plan.builder()
+                        .participation(participation)
+                        .category(PlanCategory.CULTURE)
+                        .categoryGoalAmount(50000L)
+                        .build(),
+                Plan.builder()
+                        .participation(participation)
+                        .category(PlanCategory.LIVING)
+                        .categoryGoalAmount(50000L)
+                        .build(),
+                Plan.builder()
+                        .participation(participation)
+                        .category(PlanCategory.EATOUT)
+                        .categoryGoalAmount(100000L)
+                        .build()
+        ));
     }
 
     @Transactional(readOnly = true)
