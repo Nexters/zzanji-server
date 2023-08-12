@@ -31,10 +31,8 @@ public class NotificationInfo {
     @Enumerated(EnumType.STRING)
     private OperatingSystem operatingSystem;
 
-    @Column(nullable = false)
     private int notificationHour;
 
-    @Column(nullable = false)
     private int notificationMinute;
 
     @Builder
@@ -42,6 +40,11 @@ public class NotificationInfo {
         this.deviceId = deviceId;
         this.fcmToken = fcmToken;
         this.operatingSystem = operatingSystem;
+        this.notificationHour = notificationHour;
+        this.notificationMinute = notificationMinute;
+    }
+
+    public void updateNotificationTime(final int notificationHour, final int notificationMinute) {
         this.notificationHour = notificationHour;
         this.notificationMinute = notificationMinute;
     }

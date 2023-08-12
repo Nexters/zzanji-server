@@ -7,17 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ConfigNotificationRequestDto {
+public class ConfigFcmTokenRequestDto {
     private String fcmToken;
     private OperatingSystem operatingSystem;
-    private int notificationHour;
-    private int notificationMinute;
 
     @Builder
-    public ConfigNotificationRequestDto(String fcmToken, OperatingSystem operatingSystem, int notificationHour, int notificationMinute) {
+    public ConfigFcmTokenRequestDto(final String fcmToken, final OperatingSystem operatingSystem) {
         this.fcmToken = fcmToken;
         this.operatingSystem = operatingSystem;
-        this.notificationHour = notificationHour;
-        this.notificationMinute = notificationMinute;
     }
 }

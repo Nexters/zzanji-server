@@ -1,20 +1,43 @@
 == Notification APIs
 
-=== 알람 시간 설정
-푸시 알람 시간을 설정합니다.
+=== FCM 토큰 설정(수정)
+FCM 토큰을 설정합니다.
+
+overwrite 방식으로 수정도 가능합니다.
 
 ==== 요청
 *HTTP Request Example*
-include::{snippets}/notification/config/POST/http-request.adoc[]
+include::{snippets}/notification/register/POST/http-request.adoc[]
 
 *Request Header*
-include::{snippets}/notification/config/POST/request-headers.adoc[]
+include::{snippets}/notification/register/POST/request-headers.adoc[]
 
 *Request Body*
-include::{snippets}/notification/config/POST/request-fields.adoc[]
+include::{snippets}/notification/register/POST/request-fields.adoc[]
 
 ===== 응답
 *Http Response Example*
 
 *200*
-include::{snippets}/notification/config/POST/http-response.adoc[]
+include::{snippets}/notification/register/POST/http-response.adoc[]
+
+=== 푸시 알람 시간 설정(수정)
+푸시 알람 시간을 설정합니다.
+
+overwrite 방식으로 수정도 가능합니다.
+
+==== 요청
+*HTTP Request Example*
+include::{snippets}/notification/time/POST/http-request.adoc[]
+
+*Request Header*
+include::{snippets}/notification/time/POST/request-headers.adoc[]
+
+*Request Body*
+include::{snippets}/notification/time/POST/request-fields.adoc[]
+
+===== 응답
+*Http Response Example*
+
+*200*
+include::{snippets}/notification/time/POST/http-response.adoc[]

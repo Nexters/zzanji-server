@@ -2,8 +2,9 @@ package com.nexters.jjanji.domain.notification.application;
 
 import com.nexters.jjanji.domain.notification.domain.NotificationInfo;
 import com.nexters.jjanji.domain.notification.domain.repository.NotificationInfoRepository;
-import com.nexters.jjanji.domain.notification.dto.request.ConfigNotificationRequestDto;
 import com.nexters.jjanji.infra.pushnotification.dto.RequestPushDto;
+import com.nexters.jjanji.domain.notification.dto.request.ConfigFcmTokenRequestDto;
+import com.nexters.jjanji.domain.notification.dto.request.ConfigNotificationTimeRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +20,21 @@ public class NotificationService {
     private final NotificationInfoRepository notificationInfoRepository;
 
     @Transactional
-    public void configNotificationInfo(String deviceId, ConfigNotificationRequestDto requestDto) {
-        NotificationInfo notificationInfo = NotificationInfo.builder()
-                .deviceId(deviceId)
-                .fcmToken(requestDto.getFcmToken())
-                .notificationHour(requestDto.getNotificationHour())
-                .notificationMinute(requestDto.getNotificationMinute())
-                .build();
+    public void registerFcmToken(String deviceId, ConfigFcmTokenRequestDto requestDto) {
+        final NotificationInfo notificationInfo = notificationInfoRepository.findById(deviceId).orElse(
+                    NotificationInfo.builder()
+                            .deviceId(deviceId)
+                            .operatingSystem(requestDto.getOperatingSystem())
+                            .build());
+        notificationInfoRepository.save(notificationInfo);
+    }
+
+    @Transactional
+    public void configNotificationTime(String deviceId, ConfigNotificationTimeRequestDto requestDto) {
+        // TODO 커스텀 예외 처리
+        final NotificationInfo notificationInfo = notificationInfoRepository.findById(deviceId)
+                .orElseThrow(() -> new IllegalStateException("FCM 토큰이 등록되지 않았습니다."));
+        notificationInfo.updateNotificationTime(requestDto.getNotificationHour(), requestDto.getNotificationMinute());
         notificationInfoRepository.save(notificationInfo);
     }
 

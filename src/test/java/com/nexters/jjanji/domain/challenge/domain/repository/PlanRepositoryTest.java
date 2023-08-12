@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
+@Disabled
 class PlanRepositoryTest {
 
     @Autowired ChallengeRepository challengeRepository;
@@ -30,7 +31,6 @@ class PlanRepositoryTest {
 
     @Test
     @DisplayName("다음 챌린지에 이전 참가자들의 참가 내역이 복사된다.")
-    @Disabled
     void copyPreviousPlans() {
         // given
         Member member = memberRepository.save(

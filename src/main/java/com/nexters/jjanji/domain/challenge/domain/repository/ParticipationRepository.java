@@ -24,4 +24,11 @@ public interface ParticipationRepository extends JpaRepository<Participation, Lo
             "where c.challenge_id = :currentChallengeId",
             nativeQuery = true)
     void copyPreviousParticipate(@Param("currentChallengeId") Long currentChallengeId, @Param("nextChallengeId") Long nextChallengeId);
+
+    @Modifying
+    @Query(value = "delete participation, plan, spending_history " +
+            "from participation " +
+            "left join plan on plan.participation_id = :participationId " +
+            "left join spending_history on plan.plan_id = spending_history.plan_id", nativeQuery = true)
+    void deleteParticipationBulk(@Param("participationId") Long participationId);
 }

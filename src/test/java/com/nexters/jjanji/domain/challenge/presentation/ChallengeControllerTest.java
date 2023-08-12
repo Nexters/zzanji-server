@@ -5,15 +5,18 @@ import com.nexters.jjanji.docs.RestDocs;
 import com.nexters.jjanji.domain.challenge.domain.Challenge;
 import com.nexters.jjanji.domain.challenge.domain.Participation;
 import com.nexters.jjanji.domain.challenge.domain.Plan;
+import com.nexters.jjanji.domain.challenge.domain.SpendingHistory;
 import com.nexters.jjanji.domain.challenge.domain.repository.ChallengeRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
+import com.nexters.jjanji.domain.challenge.domain.repository.SpendingHistoryRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.UpdateGoalAmountRequestDto;
 import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
+import org.antlr.v4.runtime.misc.LogManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,8 +40,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -59,6 +61,7 @@ class ChallengeControllerTest extends RestDocs {
     @Autowired ParticipationRepository participationRepository;
     @Autowired ChallengeRepository challengeRepository;
     @Autowired PlanRepository planRepository;
+    @Autowired SpendingHistoryRepository spendingHistoryRepository;
 
     Long testMemberId;
 
@@ -95,6 +98,53 @@ class ChallengeControllerTest extends RestDocs {
                         ),
                         requestFields(
                                 fieldWithPath("goalAmount").type(JsonFieldType.NUMBER).description("목표 금액")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("챌린지 API - 참여 기록 벌크 삭제")
+    void deleteParticipate() throws Exception {
+        //given
+        Member member = memberRepository.getReferenceById(testMemberId);
+        LocalDateTime testDate = LocalDateTime.of(2021, 8, 1, 0, 0, 0);
+        Challenge challenge = challengeRepository.save(
+                Challenge.builder()
+                        .startAt(testDate.plusDays(0))
+                        .endAt(testDate.plusDays(7))
+                        .build());
+
+        Participation participation = participationRepository.save(
+                Participation.builder()
+                        .challenge(challenge)
+                        .goalAmount(10000L)
+                        .member(memberRepository.getReferenceById(member.getId()))
+                        .build()
+        );
+        Plan plan = planRepository.save(Plan.builder()
+                .participation(participation)
+                .category(PlanCategory.FOOD)
+                .categoryGoalAmount(10000L)
+                .build());
+
+        spendingHistoryRepository.save(SpendingHistory.builder()
+                .plan(plan)
+                .title("title")
+                .memo("memo")
+                .spendAmount(0L)
+                .build());
+
+        //when, then
+        mockMvc.perform(delete("/v1/challenge/participate/{participationId}", participation.getId())
+                        .header(AUTHORIZATION_HEADER, DEVICE_ID))
+                .andExpect(status().isOk())
+                .andDo(document("challenge/participate/DELETE",
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER).description("(필수) device id")
+                        ),
+                        pathParameters(
+                                parameterWithName("participationId").description("(필수) 참여 id")
                         )
                 ));
     }

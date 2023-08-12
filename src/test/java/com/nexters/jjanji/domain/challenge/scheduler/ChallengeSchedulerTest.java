@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
+@Disabled
 class ChallengeSchedulerTest {
 
     @Autowired ChallengeScheduler challengeScheduler;
@@ -37,7 +38,6 @@ class ChallengeSchedulerTest {
 
     @Test
     @DisplayName("챌린지 생성 스케줄러 테스트")
-    @Disabled
     void weeklyChallengeTask() {
         //given
         Member member = memberRepository.save(

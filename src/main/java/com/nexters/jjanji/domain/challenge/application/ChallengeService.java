@@ -7,6 +7,7 @@ import com.nexters.jjanji.domain.challenge.domain.repository.ChallengeRepository
 import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationDao;
 import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
+import com.nexters.jjanji.domain.challenge.domain.repository.SpendingHistoryRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.UpdateGoalAmountRequestDto;
@@ -36,12 +37,13 @@ public class ChallengeService {
     private final MemberRepository memberRepository;
     private final PlanRepository planRepository;
     private final TransactionTemplate transactionTemplate;
+    private final SpendingHistoryRepository spendingHistoryRepository;
 
     public Challenge weeklySchedulerProcess() {
         Challenge prevChallenge = challengeRepository.findChallengeByState(ChallengeState.OPENED)
-                .orElseThrow(() -> new RuntimeException("weeklySchedulerProcess| 다음 챌린지가 존재하지 않습니다."));
-        Challenge currentChallenge = challengeRepository.findChallengeByState(ChallengeState.PRE_OPENED)
                 .orElseThrow(() -> new RuntimeException("weeklySchedulerProcess| 진행중인 챌린지가 존재하지 않습니다."));
+        Challenge currentChallenge = challengeRepository.findChallengeByState(ChallengeState.PRE_OPENED)
+                .orElseThrow(() -> new RuntimeException("weeklySchedulerProcess| 다음 챌린지가 존재하지 않습니다."));
 
         Challenge nextChallenge = transactionTemplate.execute(status -> {
             updateChallengesState(prevChallenge, currentChallenge);
@@ -95,6 +97,15 @@ public class ChallengeService {
                 .goalAmount(participateRequestDto.getGoalAmount())
                 .build();
         participationRepository.save(participation);
+    }
+
+    @Transactional(readOnly = true)
+    public void deleteParticipate(Long memberId, Long participationId) {
+        Participation participation = participationRepository.findById(participationId).orElseThrow(NotParticipateException::new);
+        if (!participation.getMember().getId().equals(memberId)) {
+            throw new NotParticipateException();
+        }
+        participationRepository.deleteParticipationBulk(participation.getId());
     }
 
     @Transactional

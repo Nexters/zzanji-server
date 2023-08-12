@@ -1,4 +1,22 @@
-== Member APIs
+== Auth APIs
+
+=== 강제 버전 업그레이드용 버전 확인 API
+
+==== 요청
+*HTTP Request Example*
+include::{snippets}/auth/version/GET/http-request.adoc[]
+
+*Query-Parameters*
+include::{snippets}/auth/version/GET/query-parameters.adoc[]
+
+===== 응답
+*Http Response Example*
+
+*200 - ok*
+include::{snippets}/auth/version/GET/http-response.adoc[]
+
+*426 - 버전 업데이트 필요*
+include::{snippets}/auth/version/GET/fail/http-response.adoc[]
 
 === device id 기반 임시 인증 가이드
 
