@@ -56,7 +56,12 @@ public class SpendingHistoryService {
                 .map(sp -> SpendingDetail.from(sp))
                 .collect(Collectors.toList());
 
-        return new SpendingDetailResponse(findPlan.getCategoryGoalAmount(), findPlan.getCategorySpendAmount(), spendingList.hasNext(), spendingDetailsDtos);
+        return new SpendingDetailResponse(
+                findPlan.getCategory(),
+                findPlan.getCategoryGoalAmount(),
+                findPlan.getCategorySpendAmount(),
+                spendingList.hasNext(),
+                spendingDetailsDtos);
     }
 
     @Transactional
