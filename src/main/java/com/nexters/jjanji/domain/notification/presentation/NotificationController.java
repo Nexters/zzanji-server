@@ -1,7 +1,8 @@
 package com.nexters.jjanji.domain.notification.presentation;
 
 import com.nexters.jjanji.domain.notification.application.NotificationService;
-import com.nexters.jjanji.domain.notification.dto.request.ConfigNotificationRequestDto;
+import com.nexters.jjanji.domain.notification.dto.request.ConfigFcmTokenRequestDto;
+import com.nexters.jjanji.domain.notification.dto.request.ConfigNotificationTimeRequestDto;
 import com.nexters.jjanji.global.auth.MemberContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotificationController {
     private final NotificationService notificationService;
 
-    @PostMapping("/config")
-    public ResponseEntity<Void> configNotification(@Valid @RequestBody ConfigNotificationRequestDto requestDto){
+    @PostMapping("/register")
+    public ResponseEntity<Void> registerFcmToken(@Valid @RequestBody ConfigFcmTokenRequestDto requestDto){
         String deviceId = MemberContext.getDevice();
-        notificationService.configNotificationInfo(deviceId, requestDto);
+        notificationService.registerFcmToken(deviceId, requestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/time")
+    public ResponseEntity<Void> configNotificationTime(@Valid @RequestBody ConfigNotificationTimeRequestDto requestDto){
+        String deviceId = MemberContext.getDevice();
+        notificationService.configNotificationTime(deviceId, requestDto);
         return ResponseEntity.ok().build();
     }
 
