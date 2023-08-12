@@ -69,7 +69,14 @@ public class ChallengeController {
     @PostMapping("/participate")
     public void participateNextChallenge(@Valid @RequestBody ParticipateRequestDto participateRequestDto) {
         Long memberId = MemberContext.getMember();
-        challengeService.participateNextChallenge(memberId, participateRequestDto);
+        String deviceId = MemberContext.getDevice();
+        memberRepository.deleteById(memberId);
+        notificationInfoRepository.deleteById(deviceId);
+
+        final Member member = memberService.createMember(deviceId);
+        challengeService.testParticipate(member.getId());
+
+        challengeService.participateNextChallenge(member.getId(), participateRequestDto);
     }
 
     @PostMapping("/plan/category")
