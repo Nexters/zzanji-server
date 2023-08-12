@@ -19,14 +19,14 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> configFcmToken(@Valid @RequestBody ConfigFcmTokenRequestDto requestDto){
+    public ResponseEntity<Void> registerFcmToken(@Valid @RequestBody ConfigFcmTokenRequestDto requestDto){
         String deviceId = MemberContext.getDevice();
         notificationService.registerFcmToken(deviceId, requestDto);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/time")
-    public ResponseEntity<Void> configNotification(@Valid @RequestBody ConfigNotificationTimeRequestDto requestDto){
+    public ResponseEntity<Void> configNotificationTime(@Valid @RequestBody ConfigNotificationTimeRequestDto requestDto){
         String deviceId = MemberContext.getDevice();
         notificationService.configNotificationTime(deviceId, requestDto);
         return ResponseEntity.ok().build();

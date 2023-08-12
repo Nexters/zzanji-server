@@ -1,9 +1,7 @@
 package com.nexters.jjanji.domain.notification.application;
 
 import com.nexters.jjanji.domain.notification.domain.NotificationInfo;
-import com.nexters.jjanji.domain.notification.domain.NotificationTime;
 import com.nexters.jjanji.domain.notification.domain.repository.NotificationInfoRepository;
-import com.nexters.jjanji.domain.notification.domain.repository.NotificationTimeRepository;
 import com.nexters.jjanji.domain.notification.dto.request.ConfigFcmTokenRequestDto;
 import com.nexters.jjanji.domain.notification.dto.request.ConfigNotificationTimeRequestDto;
 import lombok.RequiredArgsConstructor;
