@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.jjanji.docs.RestDocs;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
+import com.nexters.jjanji.domain.notification.domain.NotificationInfo;
+import com.nexters.jjanji.domain.notification.domain.repository.NotificationInfoRepository;
 import com.nexters.jjanji.domain.notification.dto.request.ConfigFcmTokenRequestDto;
 import com.nexters.jjanji.domain.notification.dto.request.ConfigNotificationTimeRequestDto;
 import com.nexters.jjanji.domain.notification.specification.OperatingSystem;
@@ -44,6 +46,9 @@ class NotificationControllerTest extends RestDocs {
     @Autowired NotificationController notificationController;
     MockMvc mockMvc;
     Long testMemberId;
+    @Autowired
+    private NotificationInfoRepository notificationInfoRepository;
+
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = getMockMvcBuilder(restDocumentation, notificationController)
@@ -87,18 +92,27 @@ class NotificationControllerTest extends RestDocs {
     @DisplayName("푸시알람 API - 푸시 알람 시간 설정(변경)")
     void configNotificationTime() throws Exception {
         //given
+        final String SOME_FCM_TOKEN = "SOME_FCM_TOKEN";
+
+        NotificationInfo notificationInfo = NotificationInfo.builder()
+                .deviceId(DEVICE_ID)
+                .fcmToken(SOME_FCM_TOKEN)
+                .operatingSystem(OperatingSystem.ANDROID)
+                .build();
+        notificationInfoRepository.save(notificationInfo);
+
         ConfigNotificationTimeRequestDto requestDto = ConfigNotificationTimeRequestDto.builder()
                 .notificationHour(5)
                 .notificationMinute(10)
                 .build();
 
         //when, then
-        mockMvc.perform(post("/v1/notification/register")
+        mockMvc.perform(post("/v1/notification/time")
                         .header(AUTHORIZATION_HEADER, DEVICE_ID)
                         .header("Content-Type", "application/json")
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andDo(document("notification/register/POST",
+                .andDo(document("notification/time/POST",
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
