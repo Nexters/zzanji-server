@@ -216,6 +216,7 @@ class SpendingHistoryControllerTest extends RestDocs {
                                 parameterWithName("size").description("(필수) 페이지 사이즈")
                         ),
                         responseFields(
+                                fieldWithPath("category").type(JsonFieldType.STRING).description("소비 카테고리"),
                                 fieldWithPath("goalAmount").type(JsonFieldType.NUMBER).description("이번주 카테고리 목표 금액"),
                                 fieldWithPath("spendAmount").type(JsonFieldType.NUMBER).description("현재 카테고리 총 지출 금액"),
                                 fieldWithPath("hasNext").type(JsonFieldType.BOOLEAN).description("다음 페이지 소비 내역 존배 여부"),
