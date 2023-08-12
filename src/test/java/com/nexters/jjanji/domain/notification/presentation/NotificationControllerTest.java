@@ -2,10 +2,9 @@ package com.nexters.jjanji.domain.notification.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.jjanji.docs.RestDocs;
-import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
 import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
-import com.nexters.jjanji.domain.notification.dto.request.ConfigNotificationRequestDto;
+import com.nexters.jjanji.domain.notification.dto.request.ConfigNotificationTimeRequestDto;
 import com.nexters.jjanji.domain.notification.specification.OperatingSystem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -60,7 +58,7 @@ class NotificationControllerTest extends RestDocs {
     @DisplayName("푸시알람 API - 푸시 알람 시간 설정")
     void configNotification() throws Exception {
         //given
-        ConfigNotificationRequestDto requestDto = ConfigNotificationRequestDto.builder()
+        ConfigNotificationTimeRequestDto requestDto = ConfigNotificationTimeRequestDto.builder()
                 .fcmToken("fcmToken")
                 .operatingSystem(OperatingSystem.IOS)
                 .notificationHour(5)
