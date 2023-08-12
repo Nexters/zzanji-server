@@ -27,8 +27,8 @@ public class ParticipationDao {
         return queryFactory
                 .select(new QParticipationResponseDto(
                         participation.challenge.id,
-                        participation.challenge.endAt,
                         participation.challenge.startAt,
+                        participation.challenge.endAt,
                         participation.challenge.month,
                         participation.challenge.week,
                         participation.challenge.state,
