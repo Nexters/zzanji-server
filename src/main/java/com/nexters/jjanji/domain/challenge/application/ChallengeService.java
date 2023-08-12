@@ -192,4 +192,14 @@ public class ChallengeService {
                 .orElseThrow(NotParticipateException::new);
         participation.updateGoalAmount(updateGoalAmountRequestDto.getGoalAmount());
     }
+
+    @Transactional
+    public void updateCategoryPlanNextChallenge(Long memberId, List<CreateCategoryPlanRequestDto> createCategoryPlanRequestDtoList) {
+        Member member = memberRepository.getReferenceById(memberId);
+        final Challenge nextChallenge = challengeRepository.findNextChallenge();
+        Participation participation = participationRepository.findByMemberAndChallenge(member, nextChallenge)
+                .orElseThrow(NotParticipateException::new);
+        planRepository.deleteByParticipation(participation);
+        addCategoryPlan(memberId, createCategoryPlanRequestDtoList);
+    }
 }

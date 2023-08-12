@@ -37,17 +37,6 @@ public class ChallengeController {
     private final MemberService memberService;
     private final NotificationInfoRepository notificationInfoRepository;
 
-    @PostMapping("/participate/test")
-    public void testParticipate() {
-        Long memberId = MemberContext.getMember();
-        String deviceId = MemberContext.getDevice();
-        memberRepository.deleteById(memberId);
-        notificationInfoRepository.deleteById(deviceId);
-
-        final Member member = memberService.createMember(deviceId);
-        challengeService.testParticipate(member.getId());
-    }
-
     @GetMapping("/participate")
     public List<ParticipationResponseDto> getParticipateList(@RequestParam(required = false) Long cursor, @RequestParam Long size) {
         Long memberId = MemberContext.getMember();
@@ -77,6 +66,12 @@ public class ChallengeController {
         challengeService.testParticipate(member.getId());
 
         challengeService.participateNextChallenge(member.getId(), participateRequestDto);
+    }
+
+    @PutMapping("/plan/category")
+    public void updateCategoryPlan(@RequestBody List<CreateCategoryPlanRequestDto> createCategoryPlanRequestDtoList) {
+        Long memberId = MemberContext.getMember();
+        challengeService.updateCategoryPlanNextChallenge(memberId, createCategoryPlanRequestDtoList);
     }
 
     @PostMapping("/plan/category")

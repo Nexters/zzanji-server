@@ -93,4 +93,47 @@ class PlanRepositoryTest {
         assertThat(planList.get(0).getParticipation()).isEqualTo(nextParticipation);
 
     }
+
+    @Test
+    void deleteByParticipation() {
+        Member member = memberRepository.save(
+                Member.builder()
+                        .deviceId("test-device-id")
+                        .build()
+        );
+        LocalDateTime testDate = LocalDateTime.of(2021, 8, 1, 0, 0, 0);
+        Challenge currentChallenge = challengeRepository.save(
+                Challenge.builder()
+                        .startAt(testDate.plusDays(0))
+                        .endAt(testDate.plusDays(7))
+                        .build());
+        Participation currentParticipation = participationRepository.save(
+                Participation.builder()
+                        .challenge(currentChallenge)
+                        .goalAmount(10000L)
+                        .member(memberRepository.getReferenceById(member.getId()))
+                        .build()
+        );
+        planRepository.saveAll(List.of(
+                Plan.builder()
+                        .participation(currentParticipation)
+                        .categoryGoalAmount(1000L)
+                        .category(PlanCategory.FOOD)
+                        .build(),
+                Plan.builder()
+                        .participation(currentParticipation)
+                        .categoryGoalAmount(2000L)
+                        .category(PlanCategory.BEAUTY)
+                        .build(),
+                Plan.builder()
+                        .participation(currentParticipation)
+                        .categoryGoalAmount(3000L)
+                        .category(PlanCategory.EATOUT)
+                        .build()
+        ));
+
+        assertThat(planRepository.findAll()).hasSize(3);
+        planRepository.deleteByParticipation(currentParticipation);
+        assertThat(planRepository.findAll()).hasSize(0);
+    }
 }
