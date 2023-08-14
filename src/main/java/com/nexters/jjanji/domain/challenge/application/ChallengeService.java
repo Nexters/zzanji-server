@@ -38,7 +38,6 @@ public class ChallengeService {
     private final MemberRepository memberRepository;
     private final PlanRepository planRepository;
     private final TransactionTemplate transactionTemplate;
-    private final SpendingHistoryRepository spendingHistoryRepository;
 
     public Challenge weeklySchedulerProcess() {
         Challenge prevChallenge = challengeRepository.findChallengeByState(ChallengeState.OPENED)
@@ -65,7 +64,7 @@ public class ChallengeService {
         LocalDateTime todayDate = getTodayDate();
         Challenge challenge = Challenge.builder()
                 .startAt(todayDate.plusDays(7))
-                .endAt(todayDate.plusDays(14))
+                .endAt(todayDate.plusDays(14).minusSeconds(1))
                 .build();
         return challengeRepository.save(challenge);
     }
