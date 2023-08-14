@@ -4,6 +4,7 @@ import com.nexters.jjanji.domain.challenge.application.SpendingHistoryService;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingEditDto;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingSaveDto;
 import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetailResponse;
+import com.nexters.jjanji.global.auth.MemberContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +19,8 @@ public class SpendingHistoryController {
 
     @PostMapping("/{planId}/spending")
     public ResponseEntity addSpending(@PathVariable Long planId, @Valid @RequestBody SpendingSaveDto dto){
-        spendingHistoryService.addSpendingHistory(planId, dto);
+        final Long memberId = MemberContext.getMember();
+        spendingHistoryService.addSpendingHistory(memberId, planId, dto);
         return ResponseEntity.ok().build();
     }
 

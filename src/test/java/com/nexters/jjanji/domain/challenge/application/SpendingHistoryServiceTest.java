@@ -1,15 +1,19 @@
 package com.nexters.jjanji.domain.challenge.application;
 
 import com.nexters.jjanji.domain.challenge.domain.Challenge;
+import com.nexters.jjanji.domain.challenge.domain.Participation;
 import com.nexters.jjanji.domain.challenge.domain.Plan;
 import com.nexters.jjanji.domain.challenge.domain.SpendingHistory;
 import com.nexters.jjanji.domain.challenge.domain.repository.ChallengeRepository;
+import com.nexters.jjanji.domain.challenge.domain.repository.ParticipationRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.PlanRepository;
 import com.nexters.jjanji.domain.challenge.domain.repository.SpendingHistoryRepository;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingEditDto;
 import com.nexters.jjanji.domain.challenge.dto.request.SpendingSaveDto;
 import com.nexters.jjanji.domain.challenge.dto.response.SpendingDetailResponse;
 import com.nexters.jjanji.domain.challenge.specification.PlanCategory;
+import com.nexters.jjanji.domain.member.domain.Member;
+import com.nexters.jjanji.domain.member.domain.MemberRepository;
 import com.nexters.jjanji.global.exception.PlanNotFoundException;
 import com.nexters.jjanji.global.exception.SpendingPeriodInvalidException;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,16 +43,23 @@ class SpendingHistoryServiceTest {
 
     @Mock PlanRepository planRepository;
     @Mock SpendingHistoryRepository spendingHistoryRepository;
+    @Mock ParticipationRepository participationRepository;
     @Mock ChallengeRepository challengeRepository;
+    @Mock MemberRepository memberRepository;
     @InjectMocks SpendingHistoryService spendingHistoryService;
 
     @Test
     @DisplayName("지출 내역 등록에 성공하다.")
     void addSpendingHistory(){
         //given
+        final Member member = new Member(1L, "deviceId");
         final Challenge challenge = mock(Challenge.class);
         final Plan plan = mock(Plan.class);
 
+        given(memberRepository.getReferenceById(1L))
+                .willReturn(member);
+        given(participationRepository.findByMemberAndChallenge(any(), any()))
+                .willReturn(Optional.of(new Participation()));
         given(challengeRepository.findChallengeByPlanId(1L))
                 .willReturn(Optional.of(challenge));
         given(challenge.isOpenedChallenge())
@@ -58,7 +70,7 @@ class SpendingHistoryServiceTest {
         SpendingSaveDto saveDto = new SpendingSaveDto("title", "content", 1000L);
 
         //when
-        spendingHistoryService.addSpendingHistory(1L, saveDto);
+        spendingHistoryService.addSpendingHistory(1L, 1L, saveDto);
 
         //then
         verify(planRepository).findById(1L);
@@ -70,16 +82,21 @@ class SpendingHistoryServiceTest {
     @DisplayName("종료된 챌린지에 지출 내역 등록을 시도하다.")
     void addSpendingHistory_finishChallenge(){
         //given
+        final Member member = new Member(1L, "deviceId");
         final Challenge challenge = mock(Challenge.class);
         final SpendingSaveDto dto = mock(SpendingSaveDto.class);
 
+        given(memberRepository.getReferenceById(1L))
+                .willReturn(member);
+        given(participationRepository.findByMemberAndChallenge(any(), any()))
+                .willReturn(Optional.of(new Participation()));
         given(challengeRepository.findChallengeByPlanId(1L))
                 .willReturn(Optional.of(challenge));
         given(challenge.isOpenedChallenge())
                 .willReturn(false);
 
         //when & then
-        assertThatThrownBy(() -> spendingHistoryService.addSpendingHistory(1L, dto))
+        assertThatThrownBy(() -> spendingHistoryService.addSpendingHistory(1L, 1L, dto))
                 .isInstanceOf(SpendingPeriodInvalidException.class);
     }
 
@@ -87,9 +104,14 @@ class SpendingHistoryServiceTest {
     @DisplayName("지출 내역 등록시 계획된 카테고리가 없어 예외가 발생한다.")
     void addSpendingHistory_notExistPlan(){
         //given
+        final Member member = new Member(1L, "deviceId");
         final Challenge challenge = mock(Challenge.class);
         final SpendingSaveDto saveDto = new SpendingSaveDto("title", "content", 10000L);
 
+        given(memberRepository.getReferenceById(1L))
+                .willReturn(member);
+        given(participationRepository.findByMemberAndChallenge(any(), any()))
+                .willReturn(Optional.of(new Participation()));
         given(challengeRepository.findChallengeByPlanId(1L))
                 .willReturn(Optional.of(challenge));
         given(challenge.isOpenedChallenge())
@@ -99,7 +121,7 @@ class SpendingHistoryServiceTest {
 
         //when & then
         assertThatThrownBy(() -> {
-            spendingHistoryService.addSpendingHistory(1L, saveDto);
+            spendingHistoryService.addSpendingHistory(1L, 1L, saveDto);
         }).isInstanceOf(PlanNotFoundException.class);
     }
 

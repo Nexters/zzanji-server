@@ -46,8 +46,8 @@ public class Participation {
         this.goalAmount = goalAmount;
     }
 
-    public void updateCurrentAmount(Long amount) {
-        this.currentAmount += amount;
+    public void plusOrSpendAmount(final Long spendAmount) {
+        this.currentAmount += spendAmount;
     }
 
     public void updateGoalAmount(Long goalAmount) {
