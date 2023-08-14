@@ -24,6 +24,7 @@ public class NotificationService {
         final NotificationInfo notificationInfo = notificationInfoRepository.findById(deviceId).orElse(
                     NotificationInfo.builder()
                             .deviceId(deviceId)
+                            .fcmToken(requestDto.getFcmToken())
                             .operatingSystem(requestDto.getOperatingSystem())
                             .build());
         notificationInfoRepository.save(notificationInfo);

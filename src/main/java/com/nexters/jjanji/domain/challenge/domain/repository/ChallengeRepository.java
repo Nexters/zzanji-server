@@ -12,6 +12,9 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     @Query("select c from Challenge c order by c.id desc limit 1")
     Challenge findNextChallenge();
 
+    @Query("select c from Challenge c where c.state = 'OPENED'")
+    Challenge findCurrentChallenge();
+
     Optional<Challenge> findChallengeByState(ChallengeState state);
 
     @Query("select c " +

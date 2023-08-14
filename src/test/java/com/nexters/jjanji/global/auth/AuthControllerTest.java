@@ -34,7 +34,7 @@ class AuthControllerTest extends RestDocs {
     void validateRequiredAppVersion() throws Exception {
         mockMvc.perform(get("/v1/auth/version")
                         .param("os", "Android")
-                        .param("appVersion", "100.0"))
+                        .param("appVersion", "0.5.0"))
                 .andExpect(status().isOk())
                 .andDo(document("auth/version/GET",
                         preprocessResponse(prettyPrint()),
@@ -49,7 +49,7 @@ class AuthControllerTest extends RestDocs {
     void validateRequiredAppVersion_fail() throws Exception {
         mockMvc.perform(get("/v1/auth/version")
                 .param("os", "Android")
-                .param("appVersion", "0.1"))
+                .param("appVersion", "0.1.0"))
                 .andExpect(status().isUpgradeRequired())
                 .andDo(document("auth/version/GET/fail",
                         preprocessResponse(prettyPrint()),

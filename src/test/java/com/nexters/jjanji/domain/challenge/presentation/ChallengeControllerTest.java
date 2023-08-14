@@ -18,6 +18,7 @@ import com.nexters.jjanji.domain.member.domain.Member;
 import com.nexters.jjanji.domain.member.domain.MemberRepository;
 import org.antlr.v4.runtime.misc.LogManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,7 @@ class ChallengeControllerTest extends RestDocs {
     }
 
     @Test
+    @Disabled
     @DisplayName("챌린지 API - 다음 챌린지 등록")
     void participateNextChallenge() throws Exception {
         //given

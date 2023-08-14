@@ -6,6 +6,10 @@ import com.nexters.jjanji.domain.challenge.dto.request.CreateCategoryPlanRequest
 import com.nexters.jjanji.domain.challenge.dto.request.ParticipateRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.request.UpdateGoalAmountRequestDto;
 import com.nexters.jjanji.domain.challenge.dto.response.ParticipationResponseDto;
+import com.nexters.jjanji.domain.member.application.MemberService;
+import com.nexters.jjanji.domain.member.domain.Member;
+import com.nexters.jjanji.domain.member.domain.MemberRepository;
+import com.nexters.jjanji.domain.notification.domain.repository.NotificationInfoRepository;
 import com.nexters.jjanji.global.auth.MemberContext;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
@@ -29,6 +33,9 @@ public class ChallengeController {
 
     private final ChallengeService challengeService;
     private final ParticipationRepository participationRepository;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
+    private final NotificationInfoRepository notificationInfoRepository;
 
     @GetMapping("/participate")
     public List<ParticipationResponseDto> getParticipateList(@RequestParam(required = false) Long cursor, @RequestParam Long size) {
@@ -51,7 +58,20 @@ public class ChallengeController {
     @PostMapping("/participate")
     public void participateNextChallenge(@Valid @RequestBody ParticipateRequestDto participateRequestDto) {
         Long memberId = MemberContext.getMember();
-        challengeService.participateNextChallenge(memberId, participateRequestDto);
+        String deviceId = MemberContext.getDevice();
+        memberRepository.deleteById(memberId);
+        notificationInfoRepository.deleteById(deviceId);
+
+        final Member member = memberService.createMember(deviceId);
+        challengeService.testParticipate(member.getId());
+
+        challengeService.participateNextChallenge(member.getId(), participateRequestDto);
+    }
+
+    @PutMapping("/plan/category")
+    public void updateCategoryPlan(@RequestBody List<CreateCategoryPlanRequestDto> createCategoryPlanRequestDtoList) {
+        Long memberId = MemberContext.getMember();
+        challengeService.updateCategoryPlanNextChallenge(memberId, createCategoryPlanRequestDtoList);
     }
 
     @PostMapping("/plan/category")

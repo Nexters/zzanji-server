@@ -1,5 +1,6 @@
 package com.nexters.jjanji.domain.challenge.domain.repository;
 
+import com.nexters.jjanji.domain.challenge.domain.Participation;
 import com.nexters.jjanji.domain.challenge.domain.Plan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,4 +23,5 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
             nativeQuery = true)
     void copyPreviousPlans(@Param("currentChallengeId") Long currentChallengeId, @Param("nextChallengeId") Long nextChallengeId);
 
+    void deleteByParticipation(Participation participation);
 }
