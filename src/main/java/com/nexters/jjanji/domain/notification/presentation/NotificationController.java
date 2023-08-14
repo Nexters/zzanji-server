@@ -5,12 +5,13 @@ import com.nexters.jjanji.domain.notification.dto.request.ConfigFcmTokenRequestD
 import com.nexters.jjanji.domain.notification.dto.request.ConfigNotificationTimeRequestDto;
 import com.nexters.jjanji.global.auth.MemberContext;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping("/v1/notification")
