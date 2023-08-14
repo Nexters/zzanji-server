@@ -19,13 +19,10 @@ public class NotificationScheduler {
     private final NotificationService notificationService;
     private final PushNotificationClient pushNotificationClient;
 
-    /**
-     * FCM 테스트 성공시 활성화 예정
-     */
-//    @Scheduled(cron = "0 0/1 * * * *", zone = "Asia/Seoul")
-//    public void consumptionHistoryAlarm() {
-//        log.info("소비 내역 입력 알람");
-//        List<RequestPushDto> dtos = notificationService.getCurrentTimeRequestPushDtos();
-//        pushNotificationClient.pushNotificationToClients(dtos, PushMessage.CONSUMPTION_HISTORY);
-//    }
+    @Scheduled(cron = "0 0/1 * * * *", zone = "Asia/Seoul")
+    public void consumptionHistoryAlarm() {
+        log.info("소비 내역 입력 알람");
+        List<RequestPushDto> dtos = notificationService.getCurrentTimeRequestPushDtos();
+        pushNotificationClient.pushNotificationToClients(dtos, PushMessage.CONSUMPTION_HISTORY);
+    }
 }

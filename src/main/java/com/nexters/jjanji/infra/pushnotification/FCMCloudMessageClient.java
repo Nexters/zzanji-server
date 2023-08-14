@@ -41,6 +41,7 @@ public class FCMCloudMessageClient implements PushNotificationClient{
                             GoogleCredentials
                                     .fromStream(new ClassPathResource(FCM_PRIVATE_KEY_PATH).getInputStream())
                                     .createScoped(List.of(fireBaseScope)))
+                    .setProjectId("zzanz-8dc7d")
                     .build();
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
@@ -70,6 +71,7 @@ public class FCMCloudMessageClient implements PushNotificationClient{
                     }
                 }
             }
+            log.info("[Firebase Message Push Success]");
         } catch (FirebaseMessagingException e) {
             log.error("[Firebase Message Push Fail] ", e);
         }
