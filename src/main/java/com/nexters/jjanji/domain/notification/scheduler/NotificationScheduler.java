@@ -23,6 +23,8 @@ public class NotificationScheduler {
     public void consumptionHistoryAlarm() {
         log.info("소비 내역 입력 알람");
         List<RequestPushDto> dtos = notificationService.getCurrentTimeRequestPushDtos();
-        pushNotificationClient.pushNotificationToClients(dtos, PushMessage.CONSUMPTION_HISTORY);
+        if(!dtos.isEmpty()) {
+            pushNotificationClient.pushNotificationToClients(dtos, PushMessage.CONSUMPTION_HISTORY);
+        }
     }
 }
