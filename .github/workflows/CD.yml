@@ -47,10 +47,6 @@ jobs:
         with:
           name: "firebase-adminsdk.json"
           json: ${{ secrets.FIREBASE_ADMIN_SDK }}
-      - name: Move JSON file to current directory
-        run: mv ${{ github.workspace }}/firebase-adminsdk.json ./
-
-
 
       # Gradle 권한 부여
       - name: Grant Execute permission for gradlew
