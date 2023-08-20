@@ -59,8 +59,8 @@ public class ChallengeController {
     public void participateNextChallenge(@Valid @RequestBody ParticipateRequestDto participateRequestDto) {
         Long memberId = MemberContext.getMember();
         String deviceId = MemberContext.getDevice();
-        memberRepository.deleteById(memberId);
-        notificationInfoRepository.deleteById(deviceId);
+        //memberRepository.deleteById(memberId);
+        //notificationInfoRepository.deleteById(deviceId);
 
         final Member member = memberService.createMember(deviceId);
         challengeService.testParticipate(member.getId());
