@@ -42,8 +42,12 @@ jobs:
         id: create-firebase-json
         uses: jsdaniell/create-json@1.1.2
         with:
-            name: "firebase-adminsdk.json"
-            json: ${{ secrets.FIREBASE_ADMIN_SDK }}
+          name: "firebase-adminsdk"
+          json: ${{ secrets.FIREBASE_ADMIN_SDK }}
+      - name: copy firebase-adminsdk. json
+        run: |
+          touch ./src/main/resources/firebase-adminsdk.json
+          cp ${{ github.workspace }}/firebase-adminsdk ./src/main/resources/firebase-adminsdk.json
 
       # Gradle 권한 부여
       - name: Grant Execute permission for gradlew
