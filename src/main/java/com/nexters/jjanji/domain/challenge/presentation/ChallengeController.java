@@ -58,14 +58,6 @@ public class ChallengeController {
     @PostMapping("/participate")
     public void participateNextChallenge(@Valid @RequestBody ParticipateRequestDto participateRequestDto) {
         Long memberId = MemberContext.getMember();
-
-        //온보딩
-        //String deviceId = MemberContext.getDevice();
-        //memberRepository.deleteById(memberId);
-        //notificationInfoRepository.deleteById(deviceId);
-        //final Member member = memberService.createMember(deviceId);
-        challengeService.testParticipate(memberId);
-
         challengeService.participateNextChallenge(memberId, participateRequestDto);
     }
 
